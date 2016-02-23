@@ -1,0 +1,46 @@
+\documentclass{article}
+
+\usepackage{swiftnav}
+
+
+\usepackage{draftwatermark}
+\SetWatermarkLightness{0.9}
+\SetWatermarkText{Preliminary}
+\SetWatermarkScale{1}
+
+% Suppress numbers from section headings (but preserve PDF TOC).
+\makeatletter
+\renewcommand\@seccntformat[1]{}
+\makeatother
+
+\newenvironment{mpar}{\par\noindent\minipage{\linewidth}}{\endminipage\par}
+%\setlength{\skip\mpfootins}{2cm}
+\renewcommand{\thempfootnote}{(\arabic{mpfootnote})}
+
+% ---------------------------------------------------------------------------
+
+\version{2.3.1}
+\title{Piksi for UAV Aerial surveying}
+\mysubtitle{RTK direct georeferencing with Swift Navigation's Piksi GPS receiver}
+\author{Dennis Zollo, Rai Gohalwar}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\thispagestyle{firstpage}
+
+\section{Abstract}
+\label{sec:abstract}
+This is the abstract
+\tableofcontents
+\newpage
+\section{Overview}
+\label{sec:Overview}
+This is the overview
+\section{Equipment and Setup}
+\label{sec:equipment}
+here we describe the equipment
+\thispagestyle{lastpage}
+\end{document}
