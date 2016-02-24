@@ -1,7 +1,7 @@
 all:
 	make plot
 	make pdf 
-plot:
+plot: generate_plots.py data
 	python generate_plots.py
 
 pdf: whitepaper.tex
