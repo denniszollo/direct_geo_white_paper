@@ -38,18 +38,19 @@
 
 \section{Abstract}
 \label{sec:abstract}
-This whitepaper presents using Piksi, a Carrier Phase differential GPS sensor, to georeference aerial images from miocro aerial vehicles (MAVS) for surveying use cases.
-It presents both the integration and flight planning methods as well as the surveying  results from flight data as processed by the PIX4D photogrammetry software.
-Lastly, the value proposition of using RTK GPS for aerial surveying is evaluated.
+This whitepaper presents using Piksi, a Carrier Phase differential GPS sensor, to georeference aerial images from micro aerial vehicles (MAVS) for surveying use cases.
+It presents both the sensor integration, data collection methods, and real world surveying results as processed by the PIX4D photogrammetry software.  Lastly, the value proposition of using RTK GPS for aerial surveying is evaluated.
 \tableofcontents
 \newpage
 \section{Overview}
 \label{sec:Overview}
 Due to the impressive capability, low-cost, and increasing popularity of micro aerial vehicles, there is much interest and excitement about the potential applications of the aircraft in the future. One promising application for is aerial surveying for industries such as precision agriculture, mining, and forestry.
 
-In a typical aerial surveying use-case, a fixed wing or mult-rotor aircraft is outfitted with a high-quality camera.  The vehicle overflies the area of interest and captures a series of images which are processed in software to produce Digital Elevation Models (DEM's), Orthomosaics, and 3D point clouds.  These models and deliverables, in turn, can be used for photogammetry applications, volumetric measurements, or crop health measurements which can provide business value for the target use case.
+In a typical aerial surveying use-case, a fixed wing or multi-rotor aircraft is outfitted with a high-quality camera.  The vehicle overflies the area of interest and captures a series of images which are processed in software to produce Digital Elevation Models (DEM's), Orthomosaics, and 3D point clouds.  These models and deliverables, in turn, can be used for photogrammetry applications, volumetric measurements, or crop health measurements which can provide business value for the target use case.
 
-A key part of the data collection process accurate geo-referencing of the photos taken aboard the aircraft.
+Commercial software tools for photogrammetry have the ability to stitch together aerial images through visual features with techniques such as Bundle adjustment [TODO: Citations].  These software packages often require rough location and orientation of the lense when the photo was taken. To that end, most low-cost MAV control systems used for photogrammetry have the ability to geotag photos as required by the processing software. These vehicles often employ Autonomous or Single Point GPS combined with MEMS sensors to measure this information.  The typical sensor technology, combined with uncertainty in timing of the camera's shutter, limits the precision and accuracy of geotagging information and requires post-processing software to rely heavily on image processing techniques. Additionally, large amounts of sidelap and overlap between images is often required to allow post-processing software to utilize imagery information given the inaccuracy of the georeferencing information.  Lastly, survey sites lacking in visual detail (such as agricultural land) or where overlap is minimal (such as corridor mapping), often yield poor results with traditional techniques and sensors.
+
+It has been demonstrated that Carrier Phase Differential GPS (Also called Real Time Kinematic (RTK)), can improve the location accuracy of geo-referencing [Cite XBEE or other stuff here].  This paper will demonstrate methods to use Swift Navigation's Piksi GPS Receiver to this end and evaluate any performance improvements.
 
 \section{Equipment and Setup}
 \label{sec:equipment}in
@@ -99,5 +100,9 @@ F & Ublox STD & Standard & UBLOX & 7 GCPS  \\ \hline
 G & Ublox Acc & Accurate & UBLOX & None  \\ \hline
 H & Ublox Acc & Accurate & UBLOX & 7 GCPS  \\ \hline
 \end{tabular}
+\section{Results: Accuracy}
+talk about accuracy of each method
+\section{Results: Overlap/Sidelap}
+Show that overlapp can be reduced with accurate geotag
 \thispagestyle{lastpage}
 \end{document}
