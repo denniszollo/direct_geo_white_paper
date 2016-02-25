@@ -38,16 +38,21 @@
 
 \section{Abstract}
 \label{sec:abstract}
-This whitepaper presents using Piksi, a Carrier Phase differential GPS sensor, to georeference aerial images from an unmanned aerial vehicle (UAV) for surveying use cases.
+This whitepaper presents using Piksi, a Carrier Phase differential GPS sensor, to georeference aerial images from miocro aerial vehicles (MAVS) for surveying use cases.
 It presents both the integration and flight planning methods as well as the surveying  results from flight data as processed by the PIX4D photogrammetry software.
 Lastly, the value proposition of using RTK GPS for aerial surveying is evaluated.
 \tableofcontents
 \newpage
 \section{Overview}
 \label{sec:Overview}
-This is the overview
+Due to the impressive capability, low-cost, and increasing popularity of micro aerial vehicles, there is much interest and excitement about the potential applications of the aircraft in the future. One promising application for is aerial surveying for industries such as precision agriculture, mining, and forestry.
+
+In a typical aerial surveying use-case, a fixed wing or mult-rotor aircraft is outfitted with a high-quality camera.  The vehicle overflies the area of interest and captures a series of images which are processed in software to produce Digital Elevation Models (DEM's), Orthomosaics, and 3D point clouds.  These models and deliverables, in turn, can be used for photogammetry applications, volumetric measurements, or crop health measurements which can provide business value for the target use case.
+
+A key part of the data collection process accurate geo-referencing of the photos taken aboard the aircraft.
+
 \section{Equipment and Setup}
-\label{sec:equipment}
+\label{sec:equipment}in
 here we describe the equipment
 \begin{table}[]
 \centering
@@ -94,11 +99,16 @@ Camera setup (exposure, etc)
 
 \begin{tabular}{l ^ l ^ l ^ l ^ l} \hline
 \rowstyle{\bfseries}
-Method & Description & Pix4D Calibration Method & GPS Sensor & Ground Control \\ \hline
+Configuration & Description & Pix4D Calibration Method & GPS Sensor & Ground Control \\ \hline
 \rowstyle{}
 A & Piksi RTK Std & Standard & Piksi RTK (Fixed) & None  \\ \hline
-B & Piksi RTK Acc & Accurate & Piksi RTK (Fixed) & None  \\ \hline
-C & Piksi RTK Acc & Accurate & Piksi RTK (Fixed) & 7 GCPS  \\ \hline
+B& Piksi RTK Std & Standard & Piksi RTK (Fixed) & 7 GCPS  \\ \hline
+C & Piksi RTK Acc & Accurate & Piksi RTK (Fixed) & None  \\ \hline
+D & Piksi RTK Acc & Accurate & Piksi RTK (Fixed) & 7 GCPS  \\ \hline
+E & Ublox STD & Standard & UBLOX & None  \\ \hline
+F & Ublox STD & Standard & UBLOX & 7 GCPS  \\ \hline
+G & Ublox Acc & Accurate & UBLOX & None  \\ \hline
+H & Ublox Acc & Accurate & UBLOX & 7 GCPS  \\ \hline
 \end{tabular}
 \thispagestyle{lastpage}
 \end{document}
