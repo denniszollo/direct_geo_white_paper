@@ -18,7 +18,7 @@
 \renewcommand{\thempfootnote}{(\arabic{mpfootnote})}
 
 % ---------------------------------------------------------------------------
-
+\usepackage[section]{placeins}
 \version{2.3.1}
 \title{Piksi for UAV Aerial surveying}
 \mysubtitle{RTK direct georeferencing with Swift Navigation's Piksi GPS receiver}
@@ -33,9 +33,9 @@
 
 \section{Abstract}
 \label{sec:abstract}
-This whitepaper presents results of using the Piksi RTK GPS sensor for georeferencing of aerial images taken aboard a small UAV.  
-It presents an integration strategy of the Piksi sensor, as well as the results of a survey flight as analyzed by the PIX4D commercial software. 
-Different data collection and post-processing techniques are presented with an attempt to show potential value and drawbacks of using an RTK position sensor for this application.
+This whitepaper presents using Piksi, a Carrier Phase differential GPS sensor, to georeference aerial images from an unmanned aerial vehicle (UAV) for surveying use cases.
+It presents both the integration and flight planning methods as well as the surveying  results from flight data as processed by the PIX4D photogrammetry software.
+Lastly, the value proposition of using RTK GPS for aerial surveying is evaluated.
 \tableofcontents
 \newpage
 \section{Overview}
@@ -48,7 +48,7 @@ here we describe the equipment
 \centering
 \caption{My caption}
 \label{my-label}
-\begin{tabular}{|c|c|}
+\begin{tabular}{|l|c|}
 \hline
 \multicolumn{2}{|c|}{Vehicle Specifications} \\ \hline
 Frame Type            & Quad-Rotor           \\ \hline
@@ -61,5 +61,22 @@ Batteries x 2         & Multistar 6S 5200mAh \\ \hline
 Weight                & 2942 g               \\ \hline
 \end{tabular}
 \end{table}
+Camera, focal length, quadcopter
+Radios
+\section{Method}
+\label{sec:method}
+Site selection
+GCP surveying (skylark)
+Mission Planning (mission planner)
+Camera setup (exposure, etc)
+\section{Post-Processing Techniques}
+\begin{figure}
+\begin{center}
+\includegraphics[width=7in]{images/uav_survey_processing_architecture.png}
+\end{center}
+\end{figure}
+\begin{tabular}[pos]{l|l|l|l|l}
+Label & Description & Notes & GPS Sensor & GCP
+\end{tabular}
 \thispagestyle{lastpage}
 \end{document}
