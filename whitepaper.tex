@@ -3,30 +3,35 @@
 \usepackage{swiftnav}
 
 
-\usepackage{draftwatermark}
+\usepackage{draftwatermark, array}
 \SetWatermarkLightness{0.9}
 \SetWatermarkText{Preliminary}
 \SetWatermarkScale{1}
-
 % Suppress numbers from section headings (but preserve PDF TOC).
 \makeatletter
 \renewcommand\@seccntformat[1]{}
 \makeatother
-
+\newcolumntype{$}{>{\global\let\currentrowstyle\relax}}
+\newcolumntype{^}{>{\currentrowstyle}}
+\newcommand{\rowstyle}[1]{\gdef\currentrowstyle{#1}%
+  #1\ignorespaces
+}
 \newenvironment{mpar}{\par\noindent\minipage{\linewidth}}{\endminipage\par}
 %\setlength{\skip\mpfootins}{2cm}
 \renewcommand{\thempfootnote}{(\arabic{mpfootnote})}
 
+
 % ---------------------------------------------------------------------------
 \usepackage[section]{placeins}
-\version{2.3.1}
+\version{0.1}
 \title{Piksi for UAV Aerial surveying}
 \mysubtitle{RTK direct georeferencing with Swift Navigation's Piksi GPS receiver}
 \author{Dennis Zollo, Rai Gohalwar}
 \date{\today}
 
-\begin{document}
+\ignorespaces
 
+\begin{document}
 \maketitle
 
 \thispagestyle{firstpage}
@@ -57,8 +62,14 @@ Camera setup (exposure, etc)
 \includegraphics[width=7in]{images/uav_survey_processing_architecture.png}
 \end{center}
 \end{figure}
-\begin{tabular}[pos]{l|l|l|l|l}
-Label & Description & Notes & GPS Sensor & GCP
+
+\begin{tabular}{l ^ l ^ l ^ l ^ l} \hline
+\rowstyle{\bfseries}
+Method & Description & Pix4D Calibration Method & GPS Sensor & Ground Control \\ \hline
+\rowstyle{}
+A & Piksi RTK Std & Standard & Piksi RTK (Fixed) & None  \\ \hline
+B & Piksi RTK Acc & Accurate & Piksi RTK (Fixed) & None  \\ \hline
+C & Piksi RTK Acc & Accurate & Piksi RTK (Fixed) & 7 GCPS  \\ \hline
 \end{tabular}
 \thispagestyle{lastpage}
 \end{document}
