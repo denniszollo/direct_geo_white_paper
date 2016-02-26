@@ -44,26 +44,42 @@ It presents both the sensor integration, data collection methods, and real world
 \newpage
 \section{Overview}
 \label{sec:Overview}
-Due to the impressive capability, low-cost, and increasing popularity of micro aerial vehicles, there is much interest and excitement about the potential applications of the aircraft in the future. One promising application for is aerial surveying for industries such as precision agriculture, mining, and forestry.
+Due to the capability, low-cost, and popularity of micro aerial vehicles, there is much interest about their potential applications future applications. One promising application is aerial surveying for industries such as precision agriculture, mining, and forestry.
 
-In a typical aerial surveying use-case, a fixed wing or multi-rotor aircraft is outfitted with a high-quality camera.  The vehicle overflies the area of interest and captures a series of images which are processed in software to produce Digital Elevation Models (DEM's), Orthomosaics, and 3D point clouds.  These models and deliverables, in turn, can be used for photogrammetry applications, volumetric measurements, or crop health measurements which can provide business value for the target use case.
+In a typical aerial surveying use-case, a fixed wing or multi-rotor aircraft is outfitted with a high-quality camera.  The vehicle overflies the area of interest and captures a series of images which are processed in software to produce Digital Elevation Models (DEM's), Orthomosaics, and/or 3D point clouds.  These models and deliverables, in turn, can be used for photogrammetry applications, volumetric measurements, or crop health measurements which can provide actionable business value for users.
 
-Commercial software tools for photogrammetry have the ability to stitch together aerial images through visual features with techniques such as Bundle adjustment [TODO: Citations].  These software packages often require rough location and orientation of the lense when the photo was taken. To that end, most low-cost MAV control systems used for photogrammetry have the ability to geotag photos as required by the processing software. These vehicles often employ Autonomous or Single Point GPS combined with MEMS sensors to measure this information.  The typical sensor technology, combined with uncertainty in timing of the camera's shutter, limits the precision and accuracy of geotagging information and requires post-processing software to rely heavily on image processing techniques. Additionally, large amounts of sidelap and overlap between images is often required to allow post-processing software to utilize imagery information given the inaccuracy of the georeferencing information.  Lastly, survey sites lacking in visual detail (such as agricultural land) or where overlap is minimal (such as corridor mapping), often yield poor results with traditional techniques and sensors.
+Commercial software tools for photogrammetry have the ability to stitch together aerial images through visual features with techniques such as Bundle adjustment [TODO: Citations].  These software packages often require rough location and orientation of the lense when the photo was taken. To that end, most low-cost MAV control systems used for photogrammetry have the ability to geotag photos as required by the processing software. These vehicles often employ Autonomous or Single Point GPS combined with MEMS sensors to measure this information.  The typical sensor technology, combined with uncertainty in timing of the camera's shutter, limits the precision and accuracy of geotagging information and requires post-processing software to rely heavily on image processing techniques. Additionally, large amounts of sidelap and overlap between images and ground control points are often required to allow post-processing software to utilize imagery information given the inaccuracy of the georeferencing information.  Lastly, survey sites lacking in visual detail (such as agricultural land) or where overlap is minimal (such as corridor mapping), often yield poor results with traditional techniques and sensors.
 
-It has been demonstrated that Carrier Phase Differential GPS (Also called Real Time Kinematic (RTK)), can improve the location accuracy of geo-referencing [Cite XBEE or other stuff here].  This paper will demonstrate methods to use Swift Navigation's Piksi GPS Receiver to this end and evaluate any performance improvements.
+It has been demonstrated that Carrier Phase Differential GPS (Also called Real Time Kinematic (RTK)), can improve the location accuracy of geo-referencing [Cite XBEE or other stuff here].  In the sections that follow, we will demonstrate methods and results of using Swift Navigation's Piksi GPS Receiver to geotag aerial photos for aerial surveying.  It is expected that precise and accurate geotagging information can reduce the need for ground control points for typical survey missions, reduce the amount of overlap and sidelap required, and improve the quality of ultimate photogrammetry deliverables.
 
 \section{Equipment and Setup}
-\label{sec:equipment}in
-here we describe the equipment
-\begin{figure}[h]
-\includegraphics[width=7in]{images/flow_charts/uav_piksi_flow_chart.png}
-\end{figure}
 \begin{table}[]
 \centering
-\label{my-label}
-\begin{tabular}{|l|c|}
+\begin{tabular}{l ^ l}
 \hline
-\multicolumn{2}{|c|}{Vehicle Specifications} \\ \hline
+\rowstyle{\bfseries}
+Specification & Value \\ \hline
+\rowstyle{}
+Camera                                                                & Sony Nex-5T        \\ \hline
+Lens                                                                  & Sony SEL-20F28 (20mm)     \\ \hline
+\begin{tabular}[c]{@{}l@{}}Weight\\ (with vehicle mount)\end{tabular} & 424 g              \\ \hline
+Sensor                                                                & 16 MP: 4912 x 3264 \\ \hline
+Hot shoe adapter \begin{tabular}[c]{@{}l@{}}Fotasy SANEX Hot Shoe Adapter \\(ASIN: B00DE4T4E2)\end{tabular}  \\ \hline
+\end{tabular}
+\label{table:cameraspecs}
+\caption{Camera Specifications}
+\end{table}
+\label{sec:equipment}
+A camera, vehicle, and an image-tagging system using Piksi were developed to conduct experiments with careful design considerations.  Available and low cost COTS equipment was chosen to highlight that these results can be replicated without exotic or expensive equipment.  The camera chosen was a Sony NEX-5t with a fixed 20mm lense and a 16 MP CCID sensor.  The application required the ability to electrically sense the shutter which was achieved through the use of a "Fotasy SANEX Hot Shoe Adapter" the a Prontor/Compur (PC) socket for external flash Synchronization.  See table \ref{table:cameraspecs} for detailed camera specifications.
+
+The vehicle was designed and sized to carry the camera payload for a typical surveying mission.  While a fixed wing aircraft may be more applicable to surveying missions for their increased range, a quadrotor configuration was chosen for low-cost and ease of implementation.  The test vehicle is based on a 680 Tarot quad frame and uses four TigerMotor antigravity 4006 motors with 15 inch propellers. The Pixhawk autopilot controls the aircraft and a 10.4Ah 6S battery pack powers. Fully loaded the copter has a flight time of about 30 minutes. The Sony camera is attached pointing down via a custom designed 3D printed a housing. See table \ref{table:vehicle-specs} for more information.
+\begin{table}[]
+\centering
+\begin{tabular}{l^l}
+\hline
+\rowstyle{\bfseries}
+Specification & Value \\ \hline
+\rowstyle{}
 Frame Type            & Quad-Rotor           \\ \hline
 Frame                 & Tarot FY650          \\ \hline
 Flight Controller     & 3DR Pixhawk          \\ \hline
@@ -73,22 +89,17 @@ Propellers x 4        & Tarot 1555 CF        \\ \hline
 Batteries x 2         & Multistar 6S 5200mAh \\ \hline
 Weight                & 2942 g               \\ \hline
 \end{tabular}
+\label{table:vehicle-specs}
+\caption{Vehicle Specifications}
 \end{table}
+
+\begin{figure}[h]
+\includegraphics[width=7in]{images/flow_charts/uav_piksi_flow_chart.png}
+\end{figure}
+
+
 \begin{table}[]
 \centering
-\label{my-label}
-\begin{tabular}{|l|c|}
-\hline
-\multicolumn{2}{|c|}{Camera Specifications}                                                \\ \hline
-Camera                                                                & Sony Nex-5T        \\ \hline
-Lens                                                                  & Sony SEL-20F28 (20mm)     \\ \hline
-\begin{tabular}[c]{@{}l@{}}Weight\\ (with vehicle mount)\end{tabular} & 424 g              \\ \hline
-Sensor                                                                & 16 MP: 4912 x 3264 \\ \hline
-\end{tabular}
-\end{table}
-\begin{table}[]
-\centering
-\label{my-label}
 \begin{tabular}{|l|c|}
 \hline
 \multicolumn{2}{|c|}{GPS Specifications} \\ \hline
@@ -97,6 +108,8 @@ Secondary GPS       & U-Blox NEO 7N      \\ \hline
 Primary Antenna     & Tellysman TW2412   \\ \hline
 Secondary Antenna   & Taoglas gp.1575    \\ \hline
 \end{tabular}
+\label{table:gps}
+\caption{Vehicle GPS Specifications}
 \end{table}
 Camera, focal length, quadcopter
 Radios
