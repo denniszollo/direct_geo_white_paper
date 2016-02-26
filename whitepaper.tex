@@ -1,7 +1,8 @@
 \documentclass{article}
 
 \usepackage{swiftnav}
-
+\usepackage{pgfplots}
+\usepackage{filecontents}
 
 \usepackage{draftwatermark, array}
 \SetWatermarkLightness{0.9}
@@ -58,6 +59,13 @@ here we describe the equipment
 \begin{figure}[h]
 \includegraphics[width=7in]{images/flow_charts/uav_piksi_flow_chart.png}
 \end{figure}
+
+\begin{tikzpicture}
+\begin{axis}
+\addplot [ybar,fill] table [x=num, y expr= \thisrow{Y_opt}-\thisrow{Y_gps}, col sep=comma] {test.csv};
+\end{axis}
+\end{tikzpicture}
+
 \begin{table}[]
 \centering
 \label{my-label}
