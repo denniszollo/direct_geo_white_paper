@@ -54,21 +54,12 @@ Commercial software tools for photogrammetry have the ability to stitch together
 It has been demonstrated that Carrier Phase Differential GPS (Also called Real Time Kinematic (RTK)), can improve the location accuracy of geo-referencing [Cite XBEE or other stuff here].  In the sections that follow, we will demonstrate methods and results of using Swift Navigation's Piksi GPS Receiver to geotag aerial photos for aerial surveying.  It is expected that precise and accurate geotagging information can reduce the need for ground control points for typical survey missions, reduce the amount of overlap and sidelap required, and improve the quality of ultimate photogrammetry deliverables.
 
 \section{Equipment and Setup}
-<<<<<<< HEAD
 \label{sec:equipment}in
 here we describe the equipment
 \begin{figure}[h]
 \includegraphics[width=7in]{images/flow_charts/uav_piksi_flow_chart.png}
 \end{figure}
 
-\begin{tikzpicture}
-\begin{axis}
-\addplot [ybar,fill] table [x=num, y expr= \thisrow{Y_opt}-\thisrow{Y_gps}, col sep=comma] {test.csv};
-\end{axis}
-\end{tikzpicture}
-
-=======
->>>>>>> 5df4ece4f85e9f9e32c7fc41c80b6c2f2173fe6f
 \begin{table}[]
 \centering
 \begin{tabular}{l ^ l}
@@ -86,7 +77,7 @@ Hot shoe adapter \begin{tabular}[c]{@{}l@{}}Fotasy SANEX Hot Shoe Adapter \\(ASI
 \caption{Camera Specifications}
 \end{table}
 \label{sec:equipment}
-A camera, vehicle, and an image-tagging system using Piksi were developed to conduct experiments with careful design considerations.  Available and low cost COTS equipment was chosen to highlight that these results can be replicated without exotic or expensive equipment.  The camera chosen was a Sony NEX-5t with a fixed 20mm lense and a 16 MP CCID sensor.  The application required the ability to electrically sense the shutter which was achieved through the use of a "Fotasy SANEX Hot Shoe Adapter" the a Prontor/Compur (PC) socket for external flash Synchronization.  See table \ref{table:cameraspecs} for detailed camera specifications.
+A camera, vehicle, and an image-tagging system using Piksi were developed to conduct experiments with careful design considerations.  Available and low cost COTS equipment was chosen to highlight that these results can be replicated without exotic or expensive equipment.  The camera chosen was a Sony NEX-5t with a fixed 20mm lense and a 16 MP CCID sensor.  The application required the ability to electrically sense the shutter which was achieved through the use of a "Fotasy SANEX Hot Shoe Adapter" Prontor/Compur (PC) socket for external flash Synchronization.  See table \ref{table:cameraspecs} for detailed camera specifications.
 
 The vehicle was designed and sized to carry the camera payload for a typical surveying mission.  While a fixed wing aircraft may be more applicable to surveying missions for their increased range, a quadrotor configuration was chosen for low-cost and ease of implementation.  The test vehicle is based on a 680 Tarot quad frame and uses four TigerMotor antigravity 4006 motors with 15 inch propellers. The Pixhawk autopilot controls the aircraft and a 10.4Ah 6S battery pack powers. Fully loaded the copter has a flight time of about 30 minutes. The Sony camera is attached pointing down via a custom designed 3D printed a housing. See table \ref{table:vehicle-specs} for more information.
 \begin{table}[]
@@ -136,6 +127,12 @@ GCP surveying (skylark)
 Mission Planning (mission planner)
 Camera setup (exposure, etc)
 \section{Post-Processing Techniques}
+\label{sec:epostprocessing}
+Post processing tools were developed in house for this project. Images captures from the camera were not individually tagged. Instead , a file with the image names, Piksi geo-loacaiton data (WGS84) , orientation data (omega, phi, kappa) and accuracy (default of 5m horizontal and 10m vertical) was generated. This file was fed into Pix4D along with the images. Even though, 7 GCPs (Ground Control Points) were measure, none were used in the processing. 
+
+Figure 1 shows the basic layout of the post-processing setup.Georeference-process.py is a python scrypt that processes the data and generates a .csv file for Pix4d. There are other scryts within that carry out individual talks. Mavlink-decode.py extracts the piksi log file (SDBP JSON) from the dataflash BIN log file created by the Pixhawk. Interpolate-event.py linearly interpolates the position data at the trigger points using the SBP log file. Query-navlink.py is used to extract the attitude data at the trigger points. This attitude data is converted from centi-degrees to omega/phi/kappa in a subroutine in Georeference-process.py. All this data is then compiled into a file. 
+
+
 \begin{figure}
 \begin{center}
 \includegraphics[width=7in]{images/flow_charts/uav_survey_processing_architecture.png}
@@ -144,20 +141,28 @@ Camera setup (exposure, etc)
 
 \begin{tabular}{l ^ l ^ l ^ l ^ l} \hline
 \rowstyle{\bfseries}
-Configuration & Description & Pix4D Calibration Method & GPS Sensor & Ground Control \\ \hline
+Configuration & Description & Pix4D Calibration Method & GPS Sensor  \\ \hline
 \rowstyle{}
-A & Piksi RTK Std & Standard & Piksi RTK (Fixed) & None  \\ \hline
-B& Piksi RTK Std & Standard & Piksi RTK (Fixed) & 7 GCPS  \\ \hline
-C & Piksi RTK Acc & Accurate & Piksi RTK (Fixed) & None  \\ \hline
-D & Piksi RTK Acc & Accurate & Piksi RTK (Fixed) & 7 GCPS  \\ \hline
-E & Ublox STD & Standard & UBLOX & None  \\ \hline
-F & Ublox STD & Standard & UBLOX & 7 GCPS  \\ \hline
-G & Ublox Acc & Accurate & UBLOX & None  \\ \hline
-H & Ublox Acc & Accurate & UBLOX & 7 GCPS  \\ \hline
+1 & Piksi RTK Std & All Images & Piksi RTK (Fixed)  \\ \hline
+2 & Piksi RTK Std & Every Other Line & Piksi RTK (Fixed)   \\ \hline
+3 & Piksi RTK Std & Every Other Image & Piksi RTK (Fixed)  \\ \hline
+4 & Ublox Std & All Images & Ublox   \\ \hline
+5 & Ublox Std & Every Other Line & Ublox \\ \hline
+6 & Ublox Std & Every Other Image & Ublox  \\ \hline
 \end{tabular}
 \section{Results: Accuracy}
 talk about accuracy of each method
 \section{Results: Overlap/Sidelap}
 Show that overlapp can be reduced with accurate geotag
+
+The Survey mission was conducted with very high imagelap. With an overlap of 75 percent and a side lap of 60 percent, the mission was created so that in post processing we could eliminate lines and images and still be able to process the data. The average RMS error for XYZ was computed for all 6 configurations. Figure 1 shouws a graph of this data. Even though having a very small initial RMS error makes Piksi a clear winner over Ublox, Piksi also has a smaller magnitude of increased error. With every other line being processed, Piksi's errors went up 4.33 times and Ublox's errors went up 6.45 times. Moreover when every other image was processed, piksi's errors went up 5.89 times and Ublox's went up 6.65 times. 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=5.5in]{images/rms_error_graph.jpg}
+\end{center}
+\label{table:gps}
+\caption{Vehicle GPS Specifications}
+\end{figure}
 \thispagestyle{lastpage}
 \end{document}
