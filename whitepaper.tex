@@ -128,9 +128,9 @@ Mission Planning (mission planner)
 Camera setup (exposure, etc)
 \section{Post-Processing Techniques}
 \label{sec:epostprocessing}
-Post processing tools were developed in house for this project. Images captures from the camera were not individually tagged. Instead , a file with the image names, Piksi geo-loacaiton data (WGS84) , orientation data (omega, phi, kappa) and accuracy (default of 5m horizontal and 10m vertical) was generated. This file was fed into Pix4D along with the images. Even though, 7 GCPs (Ground Control Points) were measure, none were used in the processing. 
+Post processing tools were developed in house for this project. Images captures from the camera were not individually tagged. Instead , a file with the image names, Piksi geo-loacaiton data (WGS84) , orientation data (omega, phi, kappa) and accuracy (default of 5m horizontal and 10m vertical) was generated. This file was fed into Pix4D along with the images. Even though, 7 GCPs (Ground Control Points) were measure, none were used in the processing.
 
-Figure 1 shows the basic layout of the post-processing setup.Georeference-process.py is a python scrypt that processes the data and generates a .csv file for Pix4d. There are other scryts within that carry out individual talks. Mavlink-decode.py extracts the piksi log file (SDBP JSON) from the dataflash BIN log file created by the Pixhawk. Interpolate-event.py linearly interpolates the position data at the trigger points using the SBP log file. Query-navlink.py is used to extract the attitude data at the trigger points. This attitude data is converted from centi-degrees to omega/phi/kappa in a subroutine in Georeference-process.py. All this data is then compiled into a file. 
+Figure 1 shows the basic layout of the post-processing setup.Georeference-process.py is a python scrypt that processes the data and generates a .csv file for Pix4d. There are other scryts within that carry out individual talks. Mavlink-decode.py extracts the piksi log file (SDBP JSON) from the dataflash BIN log file created by the Pixhawk. Interpolate-event.py linearly interpolates the position data at the trigger points using the SBP log file. Query-navlink.py is used to extract the attitude data at the trigger points. This attitude data is converted from centi-degrees to omega/phi/kappa in a subroutine in Georeference-process.py. All this data is then compiled into a file.
 
 
 \begin{figure}
@@ -159,7 +159,7 @@ Configuration & Description & Pix4D Calibration Method & GPS Sensor & Ground Con
 \section{Results: Accuracy}
 talk about accuracy of each method
 
-Accuracy is very important when conducting a surveying mission. Ideally GCPs help post-procesing softwares refine the scale and help allign the images better. Without GCPs , Pix4D would have a hard time computing the true scale of the image unless the geo-tags were really accurate. In order to test the accuracy of Piksi , we setup a test where we used Pix4D to measure the distance between 2 GCP markers. As shown in Figure ?? , these markers were red and white. Before the mission we collected the locations of these markers very accurately. Using some post-processing tools, we compared the calculated distances to the measured distance of 111111 metres. Results from this test are shown in table ?? . As the data shows, there is little to no difference between the distance Piksi renderings show compared to the ublox renderings. The hypothesis is that, if the data is within a threshold, Pix4D considers the geolocation data minutely. Most of the stitching and scaling is done from image processing. 
+Accuracy is very important when conducting a surveying mission. Ideally GCPs help post-procesing softwares refine the scale and help allign the images better. Without GCPs , Pix4D would have a hard time computing the true scale of the image unless the geo-tags were really accurate. In order to test the accuracy of Piksi , we setup a test where we used Pix4D to measure the distance between 2 GCP markers. As shown in Figure ?? , these markers were red and white. Before the mission we collected the locations of these markers very accurately. Using some post-processing tools, we compared the calculated distances to the measured distance of 111111 metres. Results from this test are shown in table ?? . As the data shows, there is little to no difference between the distance Piksi renderings show compared to the ublox renderings. The hypothesis is that, if the data is within a threshold, Pix4D considers the geolocation data minutely. Most of the stitching and scaling is done from image processing.
 
 \begin{tabular}{l ^ l ^ l ^ l ^ l} \hline
 \rowstyle{\bfseries}
@@ -190,7 +190,7 @@ Configuration & X Error [m] & Y Error [m] & Z Error [m] & Images calibrated [per
 \section{Results: Overlap/Sidelap}
 Show that overlapp can be reduced with accurate geotag
 
-The Survey mission was conducted with very high imagelap. With an overlap of 75 percent and a side lap of 60 percent, the mission was created so that in post processing we could eliminate lines and images and still be able to process the data. The average RMS error for XYZ was computed for all 6 configurations. Figure 1 shouws a graph of this data. Even though having a very small initial RMS error makes Piksi a clear winner over Ublox, Piksi also has a smaller magnitude of increased error. With every other line being processed, Piksi's errors went up 4.33 times and Ublox's errors went up 6.45 times. Moreover when every other image was processed, piksi's errors went up 5.89 times and Ublox's went up 6.65 times. 
+The Survey mission was conducted with very high imagelap. With an overlap of 75 percent and a side lap of 60 percent, the mission was created so that in post processing we could eliminate lines and images and still be able to process the data. The average RMS error for XYZ was computed for all 6 configurations. Figure 1 shouws a graph of this data. Even though having a very small initial RMS error makes Piksi a clear winner over Ublox, Piksi also has a smaller magnitude of increased error. With every other line being processed, Piksi's errors went up 4.33 times and Ublox's errors went up 6.45 times. Moreover when every other image was processed, piksi's errors went up 5.89 times and Ublox's went up 6.65 times.
 \begin{figure}
 \begin{center}
 \includegraphics[width=5.5in]{images/rms_error_graph.jpg}
@@ -199,5 +199,19 @@ The Survey mission was conducted with very high imagelap. With an overlap of 75 
 \caption{Vehicle GPS Specifications}
 \end{figure}
 
+\section{Results: Initial accuracy estimate investigation}
+One potential output to measure post-processing quality is the RMS errors reported by Pix4d Software which come from the "Initial processing" step of the software.  Indeed, the marketing material of some vendors and other parts of the literature use this image processing output as a key metric in evaluating the quality of geolocation surveying data.
+
+In this analysis, however, the RMS errors values seemed highly affected by the image geolocation "accuracy" estimates are initially provided to the software by the user as input.  This outcome was peculiar and unexplained.  This odd relationship is presented in table [TABLE HERE]. The table shows three identical post-processing runs where the only difference was the accuracy estimate.  As this accuracy estimate decreased, the image location errors as reported in the Pix4d quality report decreased as well.  This behavior suggests that the accuracy reported by Pix4d for geolocation information is more an artifact of post-processing than representing something physical. As an additional note, in certain cases when these initial accuracy values are constrained to values below the accuracy of the sensors used for geo-referenceing, the software is unable to perform initial processing.
+
+ % images processed  2d keypoints mean RMS Error [m] X RMS Error [m] Y RMS Error [m] Z
+\begin{tabular}{l ^ l ^ l ^ l ^ l ^ l ^l ^l ^l ^l} \hline
+\rowstyle{\bfseries}
+Render label & Processing Time & Total Images & \multicolumn{2}{^l^}{Initial Image Accuracy [m]}  &  images processed & 2d keypoints & \multicolumn{3}{^l^}{Mean RMS Error [m]}
+\rowstyle{}
+a  & 1:46:58 &218 &5   &10  &84  &5902  &0.184857  &0.136434  &0.273608 \\ \hline
+b  & 01:30:50&218 &0.2 &1   &84  &5907  &0.126739  &0.097678  &0.163582 \\ \hline
+c  & 1:08:14 &218 &0.1 &0.2 &84  &5887  &0.061538  &0.06066   &0.111367 \\ \hline
+\end{tabular}
 \thispagestyle{lastpage}
 \end{document}
