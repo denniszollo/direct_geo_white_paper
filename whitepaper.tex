@@ -205,13 +205,14 @@ One potential output to measure post-processing quality is the RMS errors report
 In this analysis, however, the RMS errors values seemed highly affected by the image geolocation "accuracy" estimates are initially provided to the software by the user as input.  This outcome was peculiar and unexplained.  This odd relationship is presented in table [TABLE HERE]. The table shows three identical post-processing runs where the only difference was the accuracy estimate.  As this accuracy estimate decreased, the image location errors as reported in the Pix4d quality report decreased as well.  This behavior suggests that the accuracy reported by Pix4d for geolocation information is more an artifact of post-processing than representing something physical. As an additional note, in certain cases when these initial accuracy values are constrained to values below the accuracy of the sensors used for geo-referenceing, the software is unable to perform initial processing.
 
  % images processed  2d keypoints mean RMS Error [m] X RMS Error [m] Y RMS Error [m] Z
-\begin{tabular}{l ^ l ^ l ^ l ^ l ^ l ^l ^l ^l ^l} \hline
+\begin{tabular}{l ^ c ^ c ^ l ^ l ^c ^c ^c} \hline
 \rowstyle{\bfseries}
-Render label & Processing Time & Total Images & \multicolumn{2}{^l^}{Initial Image Accuracy [m]}  &  images processed & 2d keypoints & \multicolumn{3}{^l^}{Mean RMS Error [m]}
+Label & \multicolumn{2}{^c^}{Initial Image Accuracy [m]}  & Images & 2d keypoints & \multicolumn{3}{^c^}{Mean RMS Error [m]} \\
+&   X,Y & Z & processed (\%) & & X & Y & Z & \\ \hline
 \rowstyle{}
-a  & 1:46:58 &218 &5   &10  &84  &5902  &0.184857  &0.136434  &0.273608 \\ \hline
-b  & 01:30:50&218 &0.2 &1   &84  &5907  &0.126739  &0.097678  &0.163582 \\ \hline
-c  & 1:08:14 &218 &0.1 &0.2 &84  &5887  &0.061538  &0.06066   &0.111367 \\ \hline
+a  &5   &10  &84  &5902  &0.184857  &0.136434  &0.273608 \\ \hline
+b  &0.2 &1   &84  &5907  &0.126739  &0.097678  &0.163582 \\ \hline
+c  &0.1 &0.2 &84  &5887  &0.061538  &0.06066   &0.111367 \\ \hline
 \end{tabular}
 \thispagestyle{lastpage}
 \end{document}
