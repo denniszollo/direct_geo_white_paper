@@ -141,22 +141,56 @@ Figure 1 shows the basic layout of the post-processing setup.Georeference-proces
 
 \begin{tabular}{l ^ l ^ l ^ l ^ l} \hline
 \rowstyle{\bfseries}
-Configuration & Description & Pix4D Calibration Method & GPS Sensor  \\ \hline
+Configuration & Description & Pix4D Calibration Method & GPS Sensor & Ground Control \\ \hline
 \rowstyle{}
-1 & Piksi RTK Std & All Images & Piksi RTK (Fixed)  \\ \hline
-2 & Piksi RTK Std & Every Other Line & Piksi RTK (Fixed)   \\ \hline
-3 & Piksi RTK Std & Every Other Image & Piksi RTK (Fixed)  \\ \hline
-4 & Ublox Std & All Images & Ublox   \\ \hline
-5 & Ublox Std & Every Other Line & Ublox \\ \hline
-6 & Ublox Std & Every Other Image & Ublox  \\ \hline
+1 & Piksi RTK Std & All Images & Piksi RTK (Fixed) & No GCP \\ \hline
+2 & Piksi RTK Std & Every Other Line & Piksi RTK (Fixed) & No GCP   \\ \hline
+3 & Piksi RTK Std & Every Other Image & Piksi RTK (Fixed) & No GCP  \\ \hline
+4 & Piksi RTK Std & All Images & Piksi RTK (Fixed) & GCP \\ \hline
+5 & Piksi RTK Acc & All Images & Piksi RTK (Fixed) & No GCP \\ \hline
+6 & Piksi RTK Acc & All Images & Piksi RTK (Fixed) & GCP \\ \hline
+7 & Ublox Std & All Images & Ublox & No GCP   \\ \hline
+8 & Ublox Std & Every Other Line & Ublox & No GCP \\ \hline
+9 & Ublox Std & Every Other Image & Ublox & No GCP  \\ \hline
+10 & Ublox Std & All Images & Ublox & GCP \\ \hline
+11 & Ublox Acc & All Images & Ublox & No GCP \\ \hline
+12 & Ublox Acc & All Images & Ublox & GCP \\ \hline
 \end{tabular}
 \section{Results: Accuracy}
 talk about accuracy of each method
+
+Accuracy is very important when conducting a surveying mission. Ideally GCPs help post-procesing softwares refine the scale and help allign the images better. Without GCPs , Pix4D would have a hard time computing the true scale of the image unless the geo-tags were really accurate. In order to test the accuracy of Piksi , we setup a test where we used Pix4D to measure the distance between 2 GCP markers. As shown in Figure ?? , these markers were red and white. Before the mission we collected the locations of these markers very accurately. Using some post-processing tools, we compared the calculated distances to the measured distance of 111111 metres. Results from this test are shown in table ?? . As the data shows, there is little to no difference between the distance Piksi renderings show compared to the ublox renderings. The hypothesis is that, if the data is within a threshold, Pix4D considers the geolocation data minutely. Most of the stitching and scaling is done from image processing. 
+
+\begin{tabular}{l ^ l ^ l ^ l ^ l} \hline
+\rowstyle{\bfseries}
+Configuration & X Error [m] & Y Error [m] & Z Error [m] & Images calibrated [percent]   \\ \hline
+\rowstyle{}
+1 & 0.185 & 0.136 & 0.274 & 84   \\ \hline
+2 & 0.653 & 0.552 & 1.056 & 64    \\ \hline
+3 & 0.847 & 1.182 & 1.202 & 59  \\ \hline
+4 & 0.076 & 0.089 & 0.011 & 85    \\ \hline
+5 & 0.556 & 0.619 & 0.989 & 99  \\ \hline
+6 & 0.277 & 0.073 & 0.723 & 95   \\ \hline
+7 & 0.202 & 0.840 & 0.563 & 82   \\ \hline
+8 & 3.075 & 1.842 & 1.255 & 64   \\ \hline
+9 & 2.191 & 3.028 & 1.897 & 57  \\ \hline
+10 & 0.086 & 0.096 & 0.024 & 81   \\ \hline
+11 & 0.500 & 0.625 & 0.959 & 99   \\ \hline
+12 & WOULD & NOT & RENDER   \\ \hline
+\end{tabular}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=5.5in]{images/accuracy_test_image.jpg}
+\end{center}
+\label{table:gps}
+\caption{Vehicle GPS Specifications}
+\end{figure}
+
 \section{Results: Overlap/Sidelap}
 Show that overlapp can be reduced with accurate geotag
 
 The Survey mission was conducted with very high imagelap. With an overlap of 75 percent and a side lap of 60 percent, the mission was created so that in post processing we could eliminate lines and images and still be able to process the data. The average RMS error for XYZ was computed for all 6 configurations. Figure 1 shouws a graph of this data. Even though having a very small initial RMS error makes Piksi a clear winner over Ublox, Piksi also has a smaller magnitude of increased error. With every other line being processed, Piksi's errors went up 4.33 times and Ublox's errors went up 6.45 times. Moreover when every other image was processed, piksi's errors went up 5.89 times and Ublox's went up 6.65 times. 
-
 \begin{figure}
 \begin{center}
 \includegraphics[width=5.5in]{images/rms_error_graph.jpg}
@@ -164,5 +198,6 @@ The Survey mission was conducted with very high imagelap. With an overlap of 75 
 \label{table:gps}
 \caption{Vehicle GPS Specifications}
 \end{figure}
+
 \thispagestyle{lastpage}
 \end{document}
