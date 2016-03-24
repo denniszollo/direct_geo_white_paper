@@ -45,17 +45,18 @@ It presents both the sensor integration, data collection methods, and real world
 \newpage
 \section{Overview}
 \label{sec:Overview}
-Due to the capability, low-cost, and popularity of micro aerial vehicles, there is much interest about their potential applications future applications. One promising application is aerial surveying for industries such as precision agriculture, mining, and forestry.
+Due to the capability, low-cost, and popularity of micro aerial vehicles, there is much interest about their potential applications including aerial surveying for industries such as precision agriculture, mining, and forestry.
 
-In a typical aerial surveying use-case, a fixed wing or multi-rotor aircraft is outfitted with a high-quality camera.  The vehicle overflies the area of interest and captures a series of images which are processed in software to produce Digital Elevation Models (DEM's), Orthomosaics, and/or 3D point clouds.  These models and deliverables, in turn, can be used for photogrammetry applications, volumetric measurements, or crop health measurements which can provide actionable business value for users.
+In a typical aerial surveying use-case, an aircraft is outfitted with a high-quality camera and overflies an area of interest while capturing a series of images.  The images are then processed in software to produce Digital Elevation Models (DEM's), Orthomosaics, and/or 3D point clouds which can be used for photogrammetry applications, volumetric measurements, or crop health analysis to provide business value for users.
 
-Commercial software tools for photogrammetry have the ability to stitch together aerial images through visual features with techniques such as Bundle adjustment [TODO: Citations].  These software packages often require rough location and orientation of the lense when the photo was taken. To that end, most low-cost MAV control systems used for photogrammetry have the ability to geotag photos as required by the processing software. These vehicles often employ Autonomous or Single Point GPS combined with MEMS sensors to measure this information.  The typical sensor technology, combined with uncertainty in timing of the camera's shutter, limits the precision and accuracy of geotagging information and requires post-processing software to rely heavily on image processing techniques. Additionally, large amounts of sidelap and overlap between images and ground control points are often required to allow post-processing software to utilize imagery information given the inaccuracy of the georeferencing information.  Lastly, survey sites lacking in visual detail (such as agricultural land) or where overlap is minimal (such as corridor mapping), often yield poor results with traditional techniques and sensors.
+Commercial software tools for photogrammetry have the ability to stitch together aerial images through visual features with techniques such as Bundle adjustment [TODO: Citations].  These software packages often require rough location and orientation of the lense when the photo was taken.
 
-It has been demonstrated that Carrier Phase Differential GPS (Also called Real Time Kinematic (RTK)), can improve the location accuracy of geo-referencing [Cite XBEE or other stuff here].  In the sections that follow, we will demonstrate methods and results of using Swift Navigation's Piksi GPS Receiver to geotag aerial photos for aerial surveying.  It is expected that precise and accurate geotagging information can reduce the need for ground control points for typical survey missions, reduce the amount of overlap and sidelap required, and improve the quality of ultimate photogrammetry deliverables.
+To facilitate this post-processing, most low-cost MAV control systems used for photogrammetry have the ability to geotag photos as required by the processing software through Autonomous GPS combined with MEMS sensors.  The typical sensor technology, combined with uncertainty in timing of the camera's shutter, limits the precision and accuracy of geotagging information and requires post-processing software to rely heavily on image processing techniques. Additionally, large amounts of sidelap and overlap between images and ground control points are often required to allow post-processing software to utilize imagery information given the inaccuracy of the georeferencing information.  Lastly, survey sites lacking in visual detail (such as agricultural land) or where overlap is minimal (such as corridor mapping), often yield poor results with traditional techniques and sensors.
+
+It has been demonstrated that Carrier Phase Differential GPS (also called Real Time Kinematic (RTK) GPS), can improve the location accuracy of georeferencing [Cite XBEE or other stuff here].  In the sections that follow, we will demonstrate methods and results of using Swift Navigation's Piksi GPS Receiver to geotag aerial photos for aerial surveying.  It is expected that precise and accurate geotagging information can reduce the need for ground control points for typical survey missions, reduce the amount of overlap and sidelap required, and improve the quality of ultimate photogrammetry deliverables.
 
 \section{Equipment and Setup}
-\label{sec:equipment}in
-here we describe the equipment
+\label{sec:equipment}
 \begin{figure}[h]
 \includegraphics[width=7in]{images/flow_charts/uav_piksi_flow_chart.png}
 \end{figure}
@@ -207,12 +208,19 @@ In this analysis, however, the RMS errors values seemed highly affected by the i
  % images processed  2d keypoints mean RMS Error [m] X RMS Error [m] Y RMS Error [m] Z
 \begin{tabular}{l ^ c ^ c ^ l ^ l ^c ^c ^c} \hline
 \rowstyle{\bfseries}
-Label & \multicolumn{2}{^c^}{Initial Image Accuracy [m]}  & Images & 2d keypoints & \multicolumn{3}{^c^}{Mean RMS Error [m]} \\
-&   X,Y & Z & processed (\%) & & X & Y & Z & \\ \hline
+Label & \multicolumn{2}{^c}{Initial Image Accuracy [m]}  & Images & 2d keypoints & \multicolumn{3}{^c}{Mean RMS Error [m]} \\
+&   X,Y & Z & processed (\%) & & X & Y & Z  \\ \hline
 \rowstyle{}
 a  &5   &10  &84  &5902  &0.184857  &0.136434  &0.273608 \\ \hline
 b  &0.2 &1   &84  &5907  &0.126739  &0.097678  &0.163582 \\ \hline
 c  &0.1 &0.2 &84  &5887  &0.061538  &0.06066   &0.111367 \\ \hline
 \end{tabular}
+\begin{thebibliography}{1}
+\bibitem{sensefly1}
+Strechha,  Christophe.
+\textit{The Accuracy of Automatic Photogrammetric Techniques on Ultra-Light UAV Imagery}.
+ UAV-g 2011 - Unmanned Aerial Vehicle in Geomatics, Zürich, CH, September 14-16, 2011
+
+\end{thebibliography}
 \thispagestyle{lastpage}
 \end{document}
