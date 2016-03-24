@@ -62,6 +62,8 @@ It has been demonstrated that Carrier Phase Differential GPS (also called Real T
 \label{sec:equipment}
 \begin{figure}[h]
 \includegraphics[width=7in]{images/flow_charts/uav_piksi_flow_chart.png}
+\caption{Vehicle Diagram}
+\label{figure:vehicle-diagram}
 \end{figure}
 
 \label{sec:equipment}
@@ -146,7 +148,7 @@ To get the best quality possible, it was also necessary to configure the camera 
 \label{sec:epostprocessing}
 Post processing tools were developed in house for this project. Images captures from the camera were not individually tagged. Instead , a file with the image names, Piksi geo-loacaiton data (WGS84) , orientation data (omega, phi, kappa) and accuracy (default of 5m horizontal and 10m vertical) was generated. This file was fed into Pix4D along with the images. Even though 7 GCPs (Ground Control Points) were measured, none were used in the processing.
 
-Figure \ref{postprocess} shows the basic layout of the post-processing routines as to allow the methods to be reproduced.  Georeference-process.py is a top-level python script that processes the data and generates a .csv file with image Geolocations that can be consumed by Pix4d. There are other scripts within that carry out individual tasks. Mavlink-decode.py extracts the piksi log file (SBP JSON) from the dataflash BIN log file created by the Pixhawk. Interpolate-event.py linearly interpolates the position data at the trigger points using the SBP log file. Query-mavlink.py is used to extract the attitude data at each shutter time. This attitude data is converted from euler angle centi-degrees to the surveying coordinate frame (omega/phi/kappa) in a subroutine in Georeference-process.py. All this data is then compiled into a csv file formate specified by Pix4d with a Geolocation and camera attitude for each image.  All scripts are open-source software available from Swift Navigations Github repository.
+Figure \ref{postprocess} shows the basic layout of the post-processing routines as to allow the methods to be reproduced.  Georeference-process.py is a top-level python script that processes the data and generates a .csv file with image Geolocations that can be consumed by Pix4d. There are other scripts within that carry out individual tasks. Mavlink-decode.py extracts the piksi log file (SBP JSON) from the dataflash BIN log file created by the Pixhawk. Interpolate-event.py linearly interpolates the position data at the trigger points using the SBP log file. Query-mavlink.py is used to extract the attitude data at each shutter time. This attitude data is converted from Euler angle centi-degrees to the surveying coordinate frame (omega/phi/kappa) in a subroutine in Georeference-process.py. All this data is then compiled into a csv file formate specified by Pix4d with a Geolocation and camera attitude for each image.  All scripts are open-source software available from Swift Navigation's Github repositories \url{http://github.com/swift-nav}
 
 
 \begin{figure}
