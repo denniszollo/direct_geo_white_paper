@@ -56,7 +56,7 @@ Commercial software tools for photogrammetry have the ability to stitch together
 
 To facilitate this post-processing, most low-cost MAV control systems used for photogrammetry have the ability to geotag photos as required by the processing software through Autonomous GPS combined with MEMS sensors.  The typical sensor technology, combined with uncertainty in timing of the camera's shutter, limits the precision and accuracy of geotagging information and requires post-processing software to rely heavily on image processing techniques. Additionally, large amounts of sidelap and overlap between images and ground control points are often required to allow post-processing software to utilize imagery information given the inaccuracy of the georeferencing information.  Lastly, survey sites lacking in visual detail (such as agricultural land) or where overlap is minimal (such as corridor mapping), often yield poor results with traditional techniques and sensors.
 
-It has been demonstrated that Carrier Phase Differential GPS (also called Real Time Kinematic (RTK) GPS), can improve the location accuracy of georeferencing [Cite XBEE or other stuff here].  In the sections that follow, we will demonstrate methods and results of using Swift Navigation's Piksi GPS Receiver to geotag aerial photos for aerial surveying.  It is expected that precise and accurate geotagging information can reduce the need for ground control points for typical survey missions, reduce the amount of overlap and sidelap required, and improve the quality of ultimate photogrammetry deliverables.
+It has been demonstrated that Carrier Phase Differential GPS (also called Real Time Kinematic (RTK) GPS), can improve the location accuracy of georeferencing \cite{sensefly2}.  In the sections that follow, we will demonstrate methods and results of using Swift Navigation's Piksi GPS Receiver to geotag aerial photos for aerial surveying.  It is expected that precise and accurate geotagging information can reduce the need for ground control points for typical survey missions, reduce the amount of overlap and sidelap required, and improve the quality of ultimate photogrammetry deliverables.
 
 \section{Equipment and Setup}
 \label{sec:equipment}
@@ -77,11 +77,11 @@ Lens                                                                  & Sony SEL
 Sensor                                                                & 16 MP: 4912 x 3264 \\ \hline
 Hot shoe adapter \begin{tabular}[c]{@{}l@{}}Fotasy SANEX Hot Shoe Adapter \\(ASIN: B00DE4T4E2)\end{tabular}  \\ \hline
 \end{tabular}
-\label{table:cameraspecs}
 \caption{Camera Specifications}
+\label{cameraspecs}
 \end{table}
 \label{sec:equipment}
-A camera, vehicle, and an image-tagging system using Piksi were developed to conduct experiments with careful design considerations.  Available and low cost COTS equipment was chosen to highlight that these results can be replicated without exotic or expensive equipment.  The camera chosen was a Sony NEX-5t with a fixed 20mm lense and a 16 MP CCID sensor.  The application required the ability to electrically sense the shutter which was achieved through the use of a "Fotasy SANEX Hot Shoe Adapter" Prontor/Compur (PC) socket for external flash Synchronization.  See table \ref{table:cameraspecs} for detailed camera specifications.
+A camera, vehicle, and an image-tagging system using Piksi were developed to conduct experiments with careful design considerations.  Available and low cost COTS equipment was chosen to highlight that these results can be replicated without exotic or expensive equipment.  The camera chosen was a Sony NEX-5t with a fixed 20mm lense and a 16 MP CCID sensor.  The application required the ability to electrically sense the shutter which was achieved through the use of a "Fotasy SANEX Hot Shoe Adapter" Prontor/Compur (PC) socket for external flash Synchronization.  See table \ref{cameraspecs} for detailed camera specifications.
 
 The vehicle was designed and sized to carry the camera payload for a typical surveying mission.  While a fixed wing aircraft may be more applicable to surveying missions for their increased range, a quadrotor configuration was chosen for low-cost and ease of implementation.  The test vehicle is based on a 680 Tarot quad frame and uses four TigerMotor antigravity 4006 motors with 15 inch propellers. The Pixhawk autopilot controls the aircraft and a 10.4Ah 6S battery pack powers. Fully loaded the copter has a flight time of about 30 minutes. The Sony camera is attached pointing down via a custom designed 3D printed a housing. See table \ref{table:vehicle-specs} for more information.
 \begin{table}[]
@@ -100,8 +100,8 @@ Propellers x 4        & Tarot 1555 CF        \\ \hline
 Batteries x 2         & Multistar 6S 5200mAh \\ \hline
 Weight                & 2942 g               \\ \hline
 \end{tabular}
-\label{table:vehicle-specs}
 \caption{Vehicle Specifications}
+\label{table:vehicle-specs}
 \end{table}
 
 \begin{table}[]
@@ -298,12 +298,12 @@ a  &5   &10  &84  &5902  &0.184857  &0.136434  &0.273608 \\ \hline
 b  &0.2 &1   &84  &5907  &0.126739  &0.097678  &0.163582 \\ \hline
 c  &0.1 &0.2 &84  &5887  &0.061538  &0.06066   &0.111367 \\ \hline
 \end{tabular}
-\begin{thebibliography}{1}
+\begin{thebibliography}{9}
 \bibitem{sensefly1}
-Strechha,  Christophe.
-\textit{The Accuracy of Automatic Photogrammetric Techniques on Ultra-Light UAV Imagery}.
- UAV-g 2011 - Unmanned Aerial Vehicle in Geomatics, Zürich, CH, September 14-16, 2011
-
+Strechha,  Christophe (2011). \textit{The Accuracy of Automatic Photogrammetric Techniques on Ultra-Light UAV Imagery}. UAV-g 2011 - Unmanned Aerial Vehicle in Geomatics, Zürich, CH, September 14-16, 2011
+\bibitem{sensefly2}
+A. Roze, J-C. Zufferey, A. Beyeler, A. McClellan \textit{eBee RTK Accuracy Assessment}.
+Retrieved from \url{https://www.sensefly.com/fileadmin/user_upload/sensefly/documents/eBee-RTK-Accuracy-Assessment.pdf}
 \end{thebibliography}
 \thispagestyle{lastpage}
 \end{document}
