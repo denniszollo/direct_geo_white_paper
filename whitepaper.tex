@@ -4,6 +4,9 @@
 \usepackage{pgfplots}
 \usepackage{filecontents}
 
+
+\usepackage{subcaption}
+
 \usepackage{draftwatermark, array}
 \SetWatermarkLightness{0.9}
 \SetWatermarkText{Preliminary}
@@ -101,11 +104,6 @@ Weight                & 2942 g               \\ \hline
 \caption{Vehicle Specifications}
 \end{table}
 
-\begin{figure}[h]
-\includegraphics[width=7in]{images/flow_charts/uav_piksi_flow_chart.png}
-\end{figure}
-
-
 \begin{table}[]
 \centering
 \begin{tabular}{|l|c|}
@@ -127,6 +125,21 @@ Site selection
 GCP surveying (skylark)
 Mission Planning (mission planner)
 Camera setup (exposure, etc)
+
+%add info about how we collected the data for the GCP's 
+
+When conduting a surveying mission, it is very important to properly set-up the copter, camera, and flight parameters. To set flight parameters and other surveying parameters, Mission Planner GCS was used. Mission Planner allowed us to not only monitor the flight status during the mission; it also gave us great tools to convert user defined surveying paramters (ground sampeling distance, overlap, sidelap, area of interest, flight time and camera direction) into an autonomus mission for Pixhawk.
+
+The mission analized in this paper was designed with UAV surveying standards in mind. With a 60 percent overlap and 75 percent sidelap, the copter flew for approximatelty 22 minutes to capture 218 images. Ideally, a good Ground Sampeling Distance (GSD) for surveying is 2.5 - 5 cm. The copter in this mission was flown at 20m altitude which in theory gives a 2.37 mm GSD. Pix4D reported an average GSD of 4.9 mm due to the terrain change and poor altitude hold capabilities of the copter. Figure ?? shows the flight plan of the copter and the locations of the ground control points. 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=5in]{images/flight_plan_gcp.png}
+\end{center}
+\end{figure}
+
+To get the best quality possible, it was also necessary to configure the camera settings appropriately. During some of the initial testing, many of the images were coming out blurry. In order to compensate for the continuous movement of the copter and the vibrations, a constant shutter speed of 1/1250 sec was selected. The apature settings were auto selected by the camera. This reuslted in sharp and detailed images.
+
 \section{Post-Processing Techniques}
 \label{sec:epostprocessing}
 Post processing tools were developed in house for this project. Images captures from the camera were not individually tagged. Instead , a file with the image names, Piksi geo-loacaiton data (WGS84) , orientation data (omega, phi, kappa) and accuracy (default of 5m horizontal and 10m vertical) was generated. This file was fed into Pix4D along with the images. Even though, 7 GCPs (Ground Control Points) were measure, none were used in the processing.
@@ -157,10 +170,85 @@ Configuration & Description & Pix4D Calibration Method & GPS Sensor & Ground Con
 11 & Ublox Acc & All Images & Ublox & No GCP \\ \hline
 12 & Ublox Acc & All Images & Ublox & GCP \\ \hline
 \end{tabular}
+
+
+\begin{figure}
+\centering
+\renewcommand*\thesubfigure{\arabic{subfigure}} 
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.75\linewidth]{images/orthomosaics/p.png}
+  \caption{Piksi all images}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.75\linewidth]{images/orthomosaics/p_every_other_line.png}
+  \caption{Piksi every other line}
+  \label{fig:sub2}
+\end{subfigure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.75\linewidth]{images/orthomosaics/p_every_other_image.png}
+  \caption{Piksi Every Other Image}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.75\linewidth]{images/orthomosaics/p_gcp.png}
+  \caption{Piksi with GCPs}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.75\linewidth]{images/orthomosaics/p_accurate.png}
+  \caption{Piksi Accuracy }
+  \label{fig:sub2}
+\end{subfigure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.75\linewidth]{images/orthomosaics/p_gcp_accurate.png}
+  \caption{Piksi Accuracy with GCPs}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.75\linewidth]{images/orthomosaics/ublox.png}
+  \caption{Ublox All Images}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.75\linewidth]{images/orthomosaics/ublox_every_other_line.png}
+  \caption{Ublox Every Other Line}
+  \label{fig:sub2}
+\end{subfigure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.75\linewidth]{images/orthomosaics/ublox_every_other_image.png}
+  \caption{Ublox Every Other Image}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.75\linewidth]{images/orthomosaics/ublox_gcp.png}
+  \caption{Ublox with GCPs}
+  \label{fig:sub1}
+\end{subfigure}%
+\caption{A figure with two subfigures}
+\label{fig:test}
+\end{figure}
+
 \section{Results: Accuracy}
 talk about accuracy of each method
 
-Accuracy is very important when conducting a surveying mission. Ideally GCPs help post-procesing softwares refine the scale and help allign the images better. Without GCPs , Pix4D would have a hard time computing the true scale of the image unless the geo-tags were really accurate. In order to test the accuracy of Piksi , we setup a test where we used Pix4D to measure the distance between 2 GCP markers. As shown in Figure ?? , these markers were red and white. Before the mission we collected the locations of these markers very accurately. Using some post-processing tools, we compared the calculated distances to the measured distance of 111111 metres. Results from this test are shown in table ?? . As the data shows, there is little to no difference between the distance Piksi renderings show compared to the ublox renderings. The hypothesis is that, if the data is within a threshold, Pix4D considers the geolocation data minutely. Most of the stitching and scaling is done from image processing.
+Accuracy is very important when conducting a surveying mission. Ideally GCPs help post-procesing softwares refine the scale and help allign the images better. Without GCPs , Pix4D would have a hard time computing the true scale of the image unless the geo-tags were really accurate. In order to test the accuracy of Piksi , we setup a test where we used Pix4D to measure the distance between 2 GCP markers. As shown in Figure ?? , these markers were red and white. Before the mission we collected the locations of these markers very accurately. Using some post-processing tools, we compared the calculated distances to the measured distance of 54.83 metres. There was little to no difference between the distance Piksi renderings showed compared to the ublox renderings. The hypothesis is that, if the data is within a threshold, Pix4D considers the geolocation data minutely. Most of the stitching and scaling is done from image processing.
+
+In pursuite of finding a way to give more significance to the geolocation data, [andrew scited] from PixD suggested using the "Accurate Geolocation and Orientation" setting. Found in the settings section, this parameter allows Pix4D to rely more on the geolocation and orientation data provided by the user.  
+
+Configuration 5, 6, 11 and 12 were rendered using "Accurate Geoloaction and Orientation" settings in Pix4D. One would think that using this setting would produce better results; however the results say otherwise. Observing table ?? , both Piksi and Ublox suffer from this setting. The RMS errors increase to a point that configuration 11 doesn't produce DSM or otrhomosaic and configuration 12 doesn't render at all. In Figure ?? the DSM of Piksi clearly show the inaccuracy of renders with this setting compared to default settings.
+
+The only throry that explains this behavior is the orientation data. Since the Pixhawk flight controller have a mems IMU, it brings about a lot of error in the orientation. Moreover the conversion in Pix4D from centidegrees to omega/phi/kappa is questionable. Therefor the only logical source of error is bad orientation data which Pix4D heavily relies upon. Unfortunately there is no known way to ONLY use the geolocation data. Therefor, this effort to improve accuracy was dropped.   
 
 \begin{tabular}{l ^ l ^ l ^ l ^ l} \hline
 \rowstyle{\bfseries}
@@ -180,13 +268,8 @@ Configuration & X Error [m] & Y Error [m] & Z Error [m] & Images calibrated [per
 12 & WOULD & NOT & RENDER   \\ \hline
 \end{tabular}
 
-\begin{figure}
-\begin{center}
-\includegraphics[width=5.5in]{images/accuracy_test_image.jpg}
-\end{center}
-\label{table:gps}
-\caption{Vehicle GPS Specifications}
-\end{figure}
+
+
 
 \section{Results: Overlap/Sidelap}
 Show that overlapp can be reduced with accurate geotag
@@ -204,8 +287,17 @@ The Survey mission was conducted with very high imagelap. With an overlap of 75 
 One potential output to measure post-processing quality is the RMS errors reported by Pix4d Software which come from the "Initial processing" step of the software.  Indeed, the marketing material of some vendors and other parts of the literature use this image processing output as a key metric in evaluating the quality of geolocation surveying data.
 
 In this analysis, however, the RMS errors values seemed highly affected by the image geolocation "accuracy" estimates are initially provided to the software by the user as input.  This outcome was peculiar and unexplained.  This odd relationship is presented in table [TABLE HERE]. The table shows three identical post-processing runs where the only difference was the accuracy estimate.  As this accuracy estimate decreased, the image location errors as reported in the Pix4d quality report decreased as well.  This behavior suggests that the accuracy reported by Pix4d for geolocation information is more an artifact of post-processing than representing something physical. As an additional note, in certain cases when these initial accuracy values are constrained to values below the accuracy of the sensors used for geo-referenceing, the software is unable to perform initial processing.
-
  % images processed  2d keypoints mean RMS Error [m] X RMS Error [m] Y RMS Error [m] Z
+\begin{tabular}{l ^ l ^ l ^ l ^ l ^ l ^l ^l ^l ^l} \hline
+\rowstyle{\bfseries}
+Render label & Processing Time & Total Images & \multicolumn{2}{^l^}{Initial Image Accuracy [m]}  
+  images processed & 2d keypoints & \multicolumn{3}{^l^}{Mean RMS Error [m]}
+\rowstyle{}
+a  & 1:46:58 &218 &5   &10  &84  &5902  &0.184857  &0.136434  &0.273608 \\ \hline
+b  & 01:30:50&218 &0.2 &1   &84  &5907  &0.126739  &0.097678  &0.163582 \\ \hline
+c  & 1:08:14 &218 &0.1 &0.2 &84  &5887  &0.061538  &0.06066   &0.111367 \\ \hline
+\end{tabular}
+
 \begin{tabular}{l ^ c ^ c ^ l ^ l ^c ^c ^c} \hline
 \rowstyle{\bfseries}
 Label & \multicolumn{2}{^c}{Initial Image Accuracy [m]}  & Images & 2d keypoints & \multicolumn{3}{^c}{Mean RMS Error [m]} \\
