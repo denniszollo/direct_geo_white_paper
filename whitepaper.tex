@@ -148,6 +148,8 @@ Post processing tools were developed in house for this project. Images captures 
 
 Figure \ref{postprocess} shows the basic layout of the post-processing routines as to allow the methods to be reproduced.  Georeference-process.py is a top-level python script that processes the data and generates a .csv file with image Geolocations that can be consumed by Pix4d. There are other scripts within that carry out individual tasks. Mavlink-decode.py extracts the piksi log file (SBP JSON) from the dataflash BIN log file created by the Pixhawk. Interpolate-event.py linearly interpolates the position data at the trigger points using the SBP log file. Query-mavlink.py is used to extract the attitude data at each shutter time. This attitude data is converted from euler angle centi-degrees to the surveying coordinate frame (omega/phi/kappa) in a subroutine in Georeference-process.py. All this data is then compiled into a csv file formate specified by Pix4d with a Geolocation and camera attitude for each image.  All scripts are open-source software available from Swift Navigations Github repository.
 
+In order to compare and analyze results from Pix4D, a total of 12 variations of settings and data were selected for rendering. As described in table ?? these configurations were identical for Piksi and Ublox. 
+
 
 \begin{figure}
 \begin{center}
@@ -175,7 +177,7 @@ Configuration & Description & Pix4D Calibration Method & GPS Sensor & Ground Con
 12 & Ublox Acc & All Images & Ublox & GCP \\ \hline
 \end{tabular}
 
-In order to compare and analyze results from Pix4D, a total of 12 variations of settings and data were selected for rendering. 
+
 
 \begin{figure}
 \centering
@@ -255,7 +257,7 @@ The only theory that explains this behavior is the orientation data. Since the P
 
 \begin{tabular}{l ^ l ^ l ^ l ^ l} \hline
 \rowstyle{\bfseries}
-Configuration & X Error [m] & Y Error [m] & Z Error [m] & Images calibrated [percent]   \\ \hline
+Configuration & X Error [m] & Y Error [m] & Z Error [m] & Image calibrated [percent]   \\ \hline
 \rowstyle{}
 1 & 0.185 & 0.136 & 0.274 & 84   \\ \hline
 2 & 0.653 & 0.552 & 1.056 & 64    \\ \hline
@@ -275,11 +277,12 @@ Configuration & X Error [m] & Y Error [m] & Z Error [m] & Images calibrated [per
 
 
 \section{Results: Overlap/Sidelap}
-Show that overlapp can be reduced with accurate geotag
 
-The Survey mission was conducted with very high imagelap. With an overlap of 75 percent and a side lap of 60 percent, the mission was created so that in post processing we could eliminate lines and images and still be able to process the data. The average RMS error for XYZ was computed for all 6 configurations. Figure 1 shouws a graph of this data. Even though having a very small initial RMS error makes Piksi a clear winner over Ublox, Piksi also has a smaller magnitude of increased error. With every other line being processed, Piksi's errors went up 4.33 times and Ublox's errors went up 6.45 times. Moreover when every other image was processed, piksi's errors went up 5.89 times and Ublox's went up 6.65 times.
+Currently, surveying missions are flown with 70 to 80 percent overlap to get decent results from their data. The purpose of this high overlap is so that the user can collect plenty of data for the post-processing tools. Tools such as Pix4D are designed to favor image processing over geolocation information due to lack of accuracy in the commonly used GNSS systems on micro UAVs. The hypothesis
+is that with accurate geolocation data, the overlap percentage can be dropped without effecting the performance.
 
-The negative effect of overlap and sidelap is clearly shown in diagram ?? . The difference of RMS error from configuration 11 to 8 (Ublox) is quiet significant. In average, every other line renders from Ublox data resulted in 3 times more RMS error than Piksi. If one is not using a Piksi, the only way to bring down this error is to use GCPs. This observation proves 2 very important arguments. Firstly, this confirms that using a Piksi, an ideal surveying mission can be conducted with 25-23 percent overlap and 30 percent sidelap compared to the standard 75 and 60 percent respectively. This allows the user to get more out of their system. One can cover a bigger area with their machine, finish their job quicker and increase their ground sampling distance by flying at a lower altitude. 
+The mission was designed to have an overlap of 75 percent and a side lap of 60 percent. The idea behind these numbers was so that in post processing we could eliminate lines and images and still be able to process the data. Figure ?? shows the errors extracted from Pix4D quality reports for various configurations. Both Piksi and Ublox experience significance increase in error when lines and images are removed. That being said, the magnitude of Piksi's error is magnitudes smaller than of Ublox.
+
 
 \begin{figure}
 \centering
