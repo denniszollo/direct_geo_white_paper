@@ -132,7 +132,7 @@ Hot shoe adapter \begin{tabular}[c]{@{}l@{}}Fotasy SANEX Hot Shoe Adapter \\(ASI
 
 When conducting a surveying mission, it is very important to configure the vehicle, camera, and flight parameters. To set flight parameters and other surveying parameters, Mission Planner GCS was used. Mission Planner provided flight status during the mission and tools to convert user defined surveying parameters (ground sampling distance, overlap, sidelap, area of interest, flight time and camera direction) into an autonomous mission for Pixhawk.
 
-The mission analyzed in this paper was designed with UAV surveying standards in mind. With a 60 percent overlap and 75 percent sidelap, the vehicle flew for approximately 22 minutes to capture 218 images. The copter in this mission was flown at 20m altitude which in theory gives a 2.37 mm GSD. Pix4D reported an average GSD of 4.9 mm due to the terrain change and altitude variations of the vehicle during the mission. Figure \rf{flightplan} shows the flight plan of the copter and the locations of the ground control points.
+The mission analyzed in this paper was designed with UAV surveying standards in mind. With a 75 percent overlap and 60 percent sidelap, the vehicle flew for approximately 22 minutes to capture 218 images. The copter in this mission was flown at 20m altitude which in theory gives a 2.37 mm GSD. Pix4D reported an average GSD of 4.9 mm due to the terrain change and altitude variations of the vehicle during the mission. Figure \rf{flightplan} shows the flight plan of the copter and the locations of the ground control points.
 
 \begin{figure}
 \begin{center}
@@ -177,6 +177,7 @@ Configuration & Description & Pix4D Calibration Method & GPS Sensor & Ground Con
 12 & Ublox Acc & All Images & Ublox & GCP \\ \hline
 \end{tabular}
 
+In order to compare and analyze results from Pix4D, a total of 12 variations of settings and data were selected for rendering. 
 
 \begin{figure}
 \centering
@@ -241,20 +242,18 @@ Configuration & Description & Pix4D Calibration Method & GPS Sensor & Ground Con
   \caption{Ublox with GCPs}
   \label{fig:sub1}
 \end{subfigure}%
-\caption{A figure with two subfigures}
-\label{fig:test}
 \end{figure}
 
 \section{Results: Accuracy}
 talk about accuracy of each method
 
-Accuracy is very important when conducting a surveying mission. Ideally GCPs help post-procesing softwares refine the scale and help allign the images better. Without GCPs , Pix4D would have a hard time computing the true scale of the image unless the geo-tags were really accurate. In order to test the accuracy of Piksi , we setup a test where we used Pix4D to measure the distance between 2 GCP markers. As shown in Figure ?? , these markers were red and white. Before the mission we collected the locations of these markers very accurately. Using some post-processing tools, we compared the calculated distances to the measured distance of 54.83 metres. There was little to no difference between the distance Piksi renderings showed compared to the ublox renderings. The hypothesis is that, if the data is within a threshold, Pix4D considers the geolocation data minutely. Most of the stitching and scaling is done from image processing.
+Accuracy is very important when conducting a surveying mission. Ideally GCPs help post-procesing softwares refine the scale and help align the images better. Without GCPs , Pix4D would have a hard time computing the true scale of the image unless the geo-tags were really accurate. In order to test the accuracy of Piksi , we setup a test where we used Pix4D to measure the distance between 2 GCP markers. As shown in Figure ?? , these markers were red and white. Before the mission we collected the locations of these markers very accurately. Using some post-processing tools, we compared the calculated distances to the measured distance of 54.83 metres. There was little to no difference between the distance Piksi renderings showed compared to the ublox renderings. The hypothesis is that, if the data is within a threshold, Pix4D considers the geolocation data minutely. Most of the stitching and scaling is done from image processing.
 
 In pursuite of finding a way to give more significance to the geolocation data, [andrew scited] from PixD suggested using the "Accurate Geolocation and Orientation" setting. Found in the settings section, this parameter allows Pix4D to rely more on the geolocation and orientation data provided by the user.
 
-Configuration 5, 6, 11 and 12 were rendered using "Accurate Geoloaction and Orientation" settings in Pix4D. One would think that using this setting would produce better results; however the results say otherwise. Observing table ?? , both Piksi and Ublox suffer from this setting. The RMS errors increase to a point that configuration 11 doesn't produce DSM or otrhomosaic and configuration 12 doesn't render at all. In Figure ?? the DSM of Piksi clearly show the inaccuracy of renders with this setting compared to default settings.
+Configuration 5, 6, 11 and 12 were rendered using "Accurate Geoloaction and Orientation" settings in Pix4D. One would think that using this setting would produce better results; however the results say otherwise. Observing table ?? , both Piksi and Ublox suffer from this setting. The RMS errors increase to a point that configuration 11 doesn't produce DSM or otrhomosaic and configuration 12 doesn't render at all. In Figure ?? the orthomosaics of Piksi clearly show the inaccuracy of renders with this setting compared to default settings. The mosaic of configuration 5 is literally half the area compared to configuration 1. 
 
-The only throry that explains this behavior is the orientation data. Since the Pixhawk flight controller have a mems IMU, it brings about a lot of error in the orientation. Moreover the conversion in Pix4D from centidegrees to omega/phi/kappa is questionable. Therefor the only logical source of error is bad orientation data which Pix4D heavily relies upon. Unfortunately there is no known way to ONLY use the geolocation data. Therefor, this effort to improve accuracy was dropped.
+The only theory that explains this behavior is the orientation data. Since the Pixhawk flight controller have a mems IMU, it brings about a lot of error in the orientation. Moreover the conversion in Pix4D from centidegrees to omega/phi/kappa is questionable. Therefor the only logical source of error is bad orientation data which Pix4D heavily relies upon. Unfortunately there is no known way to ONLY use the geolocation data. Therefor, this effort to improve accuracy was dropped.
 
 \begin{tabular}{l ^ l ^ l ^ l ^ l} \hline
 \rowstyle{\bfseries}
@@ -281,12 +280,23 @@ Configuration & X Error [m] & Y Error [m] & Z Error [m] & Images calibrated [per
 Show that overlapp can be reduced with accurate geotag
 
 The Survey mission was conducted with very high imagelap. With an overlap of 75 percent and a side lap of 60 percent, the mission was created so that in post processing we could eliminate lines and images and still be able to process the data. The average RMS error for XYZ was computed for all 6 configurations. Figure 1 shouws a graph of this data. Even though having a very small initial RMS error makes Piksi a clear winner over Ublox, Piksi also has a smaller magnitude of increased error. With every other line being processed, Piksi's errors went up 4.33 times and Ublox's errors went up 6.45 times. Moreover when every other image was processed, piksi's errors went up 5.89 times and Ublox's went up 6.65 times.
+
+The negative effect of overlap and sidelap is clearly shown in diagram ?? . The difference of RMS error from configuration 11 to 8 (Ublox) is quiet significant. In average, every other line renders from Ublox data resulted in 3 times more RMS error than Piksi. If one is not using a Piksi, the only way to bring down this error is to use GCPs. This observation proves 2 very important arguments. Firstly, this confirms that using a Piksi, an ideal surveying mission can be conducted with 25-23 percent overlap and 30 percent sidelap compared to the standard 75 and 60 percent respectively. This allows the user to get more out of their system. One can cover a bigger area with their machine, finish their job quicker and increase their ground sampling distance by flying at a lower altitude. 
+
 \begin{figure}
-\begin{center}
-\includegraphics[width=5.5in]{images/rms_error_graph.jpg}
-\end{center}
-\label{table:gps}
-\caption{Vehicle GPS Specifications}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1\linewidth]{images/piksi_rms_error.png}
+  \caption{Piksi}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1\linewidth]{images/ublox_rms_error.png}
+  \caption{Ublox}
+  \label{fig:sub2}
+\end{subfigure}%
 \end{figure}
 
 \section{Results: Initial accuracy estimate investigation}
@@ -304,6 +314,7 @@ a  &5   &10  &84  &5902  &0.184857  &0.136434  &0.273608 \\ \hline
 b  &0.2 &1   &84  &5907  &0.126739  &0.097678  &0.163582 \\ \hline
 c  &0.1 &0.2 &84  &5887  &0.061538  &0.06066   &0.111367 \\ \hline
 \end{tabular}
+
 \begin{thebibliography}{9}
 \bibitem{sensefly1}
 Strechha,  Christophe (2011). \textit{The Accuracy of Automatic Photogrammetric Techniques on Ultra-Light UAV Imagery}. UAV-g 2011 - Unmanned Aerial Vehicle in Geomatics, Zürich, CH, September 14-16, 2011
@@ -311,5 +322,6 @@ Strechha,  Christophe (2011). \textit{The Accuracy of Automatic Photogrammetric 
 A. Roze, J-C. Zufferey, A. Beyeler, A. McClellan \textit{eBee RTK Accuracy Assessment}.
 Retrieved from \url{https://www.sensefly.com/fileadmin/user_upload/sensefly/documents/eBee-RTK-Accuracy-Assessment.pdf}
 \end{thebibliography}
+
 \thispagestyle{lastpage}
 \end{document}
