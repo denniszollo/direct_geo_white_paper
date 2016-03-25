@@ -42,21 +42,47 @@
 
 \section{Abstract}
 \label{sec:abstract}
-This whitepaper presents using Piksi, a Carrier Phase differential GPS sensor, to georeference aerial images from micro aerial vehicles (MAVs) for surveying use cases.
-It presents both the sensor integration, data collection methods, and real world surveying results as processed by the PIX4D photogrammetry software.  Lastly, the value proposition of using RTK GPS for aerial surveying is evaluated.
+This whitepaper presents using Piksi, a Carrier Phase differential GPS sensor, to georeference 
+aerial images from micro aerial vehicles (MAVs) for surveying use cases.
+It presents both the sensor integration, data collection methods, and real world surveying results 
+as processed by the PIX4D photogrammetry software.  Lastly, the value proposition of using RTK GPS 
+for aerial surveying is evaluated.
 \tableofcontents
 \newpage
 \section{Overview}
 \label{sec:Overview}
-Due to the capability, low-cost, and popularity of micro aerial vehicles, there is much interest about their potential applications including aerial surveying for industries such as precision agriculture, mining, and forestry.
+Due to the capability, low-cost, and popularity of micro aerial vehicles, there is much interest 
+about their potential applications including aerial surveying for industries such as precision 
+agriculture, mining, and forestry.
 
-In a typical aerial surveying use-case, an aircraft is outfitted with a high-quality camera and overflies an area of interest while capturing a series of images.  The images are then processed in software to produce Digital Elevation Models (DEM's), Orthomosaics, and/or 3D point clouds which can be used for photogrammetry applications, volumetric measurements, or crop health analysis to provide business value for users.
+In a typical aerial surveying use-case, an aircraft is outfitted with a high-quality camera and 
+overflies an area of interest while capturing a series of images.  The images are then processed in 
+software to produce Digital Elevation Models (DEM's), Orthomosaics, and/or 3D point clouds which 
+can be used for photogrammetry applications, volumetric measurements, or crop health analysis to 
+provide business value for users.
 
-Commercial software tools for photogrammetry have the ability to stitch together aerial images through visual features with techniques such as Bundle adjustment.  These software packages often require rough location and orientation of the lense when the photo was taken.
+Commercial software tools for photogrammetry have the ability to stitch together aerial images 
+through visual features with techniques such as Bundle adjustment.  These software packages often 
+require rough location and orientation of the lense when the photo was taken.
 
-To facilitate this post-processing, most low-cost MAV control systems used for photogrammetry have the ability to geotag photos as required by the processing software through Autonomous GPS combined with MEMS sensors.  The typical sensor technology, combined with uncertainty in timing of the camera's shutter, limits the precision and accuracy of geotagging information and requires post-processing software to rely heavily on image processing techniques. Additionally, large amounts of sidelap and overlap between images and ground control points are often required to allow post-processing software to utilize imagery information given the inaccuracy of the georeferencing information.  Lastly, survey sites lacking in visual detail (such as agricultural land) or where overlap is minimal (such as corridor mapping), often yield poor results with traditional techniques and sensors.
+To facilitate this post-processing, most low-cost MAV control systems used for photogrammetry have 
+the ability to geotag photos as required by the processing software through Autonomous GPS combined 
+with MEMS sensors.  The typical sensor technology, combined with uncertainty in timing of the 
+camera's shutter, limits the precision and accuracy of geotagging information and requires 
+post-processing software to rely heavily on image processing techniques. Additionally, large 
+amounts of sidelap and overlap between images and ground control points are often required to allow 
+post-processing software to utilize imagery information given the inaccuracy of the georeferencing 
+information.  Lastly, survey sites lacking in visual detail (such as agricultural land) or where 
+overlap is minimal (such as corridor mapping), often yield poor results with traditional techniques 
+and sensors.
 
-It has been demonstrated that Carrier Phase Differential GPS (also called Real Time Kinematic (RTK) GPS), can improve the location accuracy of georeferencing \cite{sensefly2}.  In the sections that follow, we will demonstrate methods and results of using Swift Navigation's Piksi GPS Receiver to geotag aerial photos for aerial surveying.  It is expected that precise and accurate geotagging information can reduce the need for ground control points for typical survey missions, reduce the amount of overlap and sidelap required, and improve the quality of ultimate photogrammetry deliverables.
+It has been demonstrated that Carrier Phase Differential GPS (also called Real Time Kinematic (RTK) 
+GPS), can improve the location accuracy of georeferencing \cite{sensefly2}.  In the sections that 
+follow, we will demonstrate methods and results of using Swift Navigation's Piksi GPS Receiver to 
+geotag aerial photos for aerial surveying.  It is expected that precise and accurate geotagging 
+information can reduce the need for ground control points for typical survey missions, reduce the 
+amount of overlap and sidelap required, and improve the quality of ultimate photogrammetry 
+deliverables.
 
 \section{Equipment and Setup}
 \label{sec:equipment}
@@ -67,9 +93,23 @@ It has been demonstrated that Carrier Phase Differential GPS (also called Real T
 \end{figure}
 
 \label{sec:equipment}
-A camera, vehicle, and an image-tagging system using Piksi were developed to conduct experiments with careful design considerations.  Available and low cost COTS equipment was chosen to highlight that these results can be replicated without exotic or expensive equipment.  The camera chosen was a Sony NEX-5t with a fixed 20mm lense and a 16 MP CCID sensor.  The application required the ability to electrically sense the shutter which was achieved through the use of a "Fotasy SANEX Hot Shoe Adapter" Prontor/Compur (PC) socket for external flash Synchronization.  See table \ref{cameraspecs} for detailed camera specifications.
+A camera, vehicle, and an image-tagging system using Piksi were developed to conduct experiments 
+with careful design considerations.  Available and low cost COTS equipment was chosen to highlight 
+that these results can be replicated without exotic or expensive equipment.  The camera chosen was 
+a Sony NEX-5t with a fixed 20mm lense and a 16 MP CCID sensor.  The application required the 
+ability to electrically sense the shutter which was achieved through the use of a "Fotasy SANEX Hot 
+Shoe Adapter" Prontor/Compur (PC) socket for external flash Synchronization.  See table 
+\ref{cameraspecs} for detailed camera specifications.
 
-The vehicle was designed and sized to carry the camera payload for a typical surveying mission.  While a fixed wing aircraft may be more applicable to surveying missions for their increased range, a quadrotor configuration was chosen for low-cost and ease of implementation.  The test vehicle is based on a 680 Tarot quad frame and uses four TigerMotor antigravity 4006 motors with 15 inch propellers. The Pixhawk autopilot controls the aircraft and a 10.4Ah 6S battery pack powers. Fully loaded the copter has a flight time of about 30 minutes. The Sony camera is attached pointing down via a custom designed 3D printed a housing. Communication to both a base station Piksi and a UAV Ground control station was accomplished via two 3D Robotics point to point radio modems. See table \ref{table:vehicle-specs} for more information.
+The vehicle was designed and sized to carry the camera payload for a typical surveying mission.  
+While a fixed wing aircraft may be more applicable to surveying missions for their increased range, 
+a quadrotor configuration was chosen for low-cost and ease of implementation.  The test vehicle is 
+based on a 680 Tarot quad frame and uses four TigerMotor antigravity 4006 motors with 15 inch 
+propellers. The Pixhawk autopilot controls the aircraft and a 10.4Ah 6S battery pack powers. Fully 
+loaded the copter has a flight time of about 30 minutes. The Sony camera is attached pointing down 
+via a custom designed 3D printed a housing. Communication to both a base station Piksi and a UAV 
+Ground control station was accomplished via two 3D Robotics point to point radio modems. See table 
+\ref{table:vehicle-specs} for more information.
 \begin{table}[]
 \centering
 \begin{tabular}{l^l}
@@ -120,10 +160,12 @@ Camera setup (exposure, etc)
 Specification & Value \\ \hline
 \rowstyle{}
 Camera                                                                & Sony Nex-5T        \\ \hline
-Lens                                                                  & Sony SEL-20F28 (20mm)     \\ \hline
+Lens                                                                  & Sony SEL-20F28 (20mm)     
+\\ \hline
 \begin{tabular}[c]{@{}l@{}}Weight\\ (with vehicle mount)\end{tabular} & 424 g              \\ \hline
 Sensor                                                                & 16 MP: 4912 x 3264 \\ \hline
-Hot shoe adapter \begin{tabular}[c]{@{}l@{}}Fotasy SANEX Hot Shoe Adapter \\(ASIN: B00DE4T4E2)\end{tabular}  \\ \hline
+Hot shoe adapter \begin{tabular}[c]{@{}l@{}}Fotasy SANEX Hot Shoe Adapter \\(ASIN: 
+B00DE4T4E2)\end{tabular}  \\ \hline
 \end{tabular}
 \caption{Camera Specifications}
 \label{cameraspecs}
@@ -131,9 +173,18 @@ Hot shoe adapter \begin{tabular}[c]{@{}l@{}}Fotasy SANEX Hot Shoe Adapter \\(ASI
 
 %add info about how we collected the data for the GCP's
 
-When conducting a surveying mission, it is very important to configure the vehicle, camera, and flight parameters. To set flight parameters and other surveying parameters, Mission Planner GCS was used. Mission Planner provided flight status during the mission and tools to convert user defined surveying parameters (ground sampling distance, overlap, sidelap, area of interest, flight time and camera direction) into an autonomous mission for Pixhawk.
+When conducting a surveying mission, it is very important to configure the vehicle, camera, and 
+flight parameters. To set flight parameters and other surveying parameters, Mission Planner GCS was 
+used. Mission Planner provided flight status during the mission and tools to convert user defined 
+surveying parameters (ground sampling distance, overlap, sidelap, area of interest, flight time and 
+camera direction) into an autonomous mission for Pixhawk.
 
-The mission analyzed in this paper was designed with UAV surveying standards in mind. With a 75 percent overlap and 60 percent sidelap, the vehicle flew for approximately 22 minutes to capture 218 images. The copter in this mission was flown at 20m altitude which in theory gives a 2.37 mm GSD. Pix4D reported an average GSD of 4.9 mm due to the terrain change and altitude variations of the vehicle during the mission. Figure \ref{flightplan} shows the flight plan of the copter and the locations of the ground control points.
+The mission analyzed in this paper was designed with UAV surveying standards in mind. With a 75 
+percent overlap and 60 percent sidelap, the vehicle flew for approximately 22 minutes to capture 
+218 images. The copter in this mission was flown at 20m altitude which in theory gives a 2.37 mm 
+GSD. Pix4D reported an average GSD of 4.9 mm due to the terrain change and altitude variations of 
+the vehicle during the mission. Figure \ref{flightplan} shows the flight plan of the copter and the 
+locations of the ground control points.
 
 \begin{figure}
 \centering
@@ -142,16 +193,41 @@ The mission analyzed in this paper was designed with UAV surveying standards in 
 \label{flightplan}
 \end{figure}
 
-To get the best quality possible, it was also necessary to configure the camera settings appropriately. During some of the initial testing, many of the images were coming out blurry. In order to compensate for the continuous movement of the copter and the vibrations, a constant shutter speed of 1/1250 sec was selected. The aperture settings were auto selected by the camera. This resulted in sharp and detailed images.
+To get the best quality possible, it was also necessary to configure the camera settings 
+appropriately. During some of the initial testing, many of the images were coming out blurry. In 
+order to compensate for the continuous movement of the copter and the vibrations, a constant 
+shutter speed of 1/1250 sec was selected. The aperture settings were auto selected by the camera. 
+This resulted in sharp and detailed images.
 
 \section{Post-Processing Techniques}
 \label{sec:postprocessing}
-Post processing tools were developed in house for this project. Images captures from the camera were not individually tagged. Instead , a file with the image names, Piksi geo-loacaiton data (WGS84) , orientation data (omega/phi/kappa) and accuracy (default of 5m horizontal and 10m vertical) was generated. This file was fed into Pix4D along with the images.
+Post processing tools were developed in house for this project. Images captures from the camera 
+were not individually tagged. Instead , a file with the image names, Piksi geo-loacaiton data 
+(WGS84) , orientation data (omega/phi/kappa) and accuracy (default of 5m horizontal and 10m 
+vertical) was generated. This file was fed into Pix4D along with the images.
 
-Figure \ref{postprocess} shows the basic layout of the post-processing routines as to allow the methods to be reproduced.  Georeference-process.py is a top-level python script that processes the data and generates a .csv file with image geolocations that can be consumed by Pix4d. There are other scripts within that carry out individual tasks. Mavlink-decode.py extracts the piksi log file (SBP JSON) from the dataflash BIN log file created by the Pixhawk. Interpolate-event.py linearly interpolates the position data at the trigger points using the SBP log file. Query-mavlink.py is used to extract the attitude data at each shutter time. This attitude data is converted from Euler angle centi-degrees to the surveying coordinate frame (omega/phi/kappa) in a subroutine in Georeference-process.py. All this data is then compiled into a csv file formate specified by Pix4d with a Geolocation and camera attitude for each image.  All scripts are open-source software available from Swift Navigation's Github repositories \url{http://github.com/swift-nav}
+Figure \ref{postprocess} shows the basic layout of the post-processing routines as to allow the 
+methods to be reproduced.  Georeference-process.py is a top-level python script that processes the 
+data and generates a .csv file with image geolocations that can be consumed by Pix4d. There are 
+other scripts within that carry out individual tasks. Mavlink-decode.py extracts the piksi log file 
+(SBP JSON) from the dataflash BIN log file created by the Pixhawk. Interpolate-event.py linearly 
+interpolates the position data at the trigger points using the SBP log file. Query-mavlink.py is 
+used to extract the attitude data at each shutter time. This attitude data is converted from Euler 
+angle centi-degrees to the surveying coordinate frame (omega/phi/kappa) in a subroutine in 
+Georeference-process.py. All this data is then compiled into a csv file formate specified by Pix4d 
+with a Geolocation and camera attitude for each image.  All scripts are open-source software 
+available from Swift Navigation's Github repositories \url{http://github.com/swift-nav}
 \subsection{Photogrammetry parameters}
-In order to compare and analyze results from Pix4D, a total of 6 variations of settings and data were selected for rendering as described in table \ref{table:postparams}.  The Calibration method column refers to whether the "Standard" calibration method in Pix4d or the "Accurate Geolocation and Orientation" methods were used.  According to Pix4d help documentation, the "Accurate" setting is "Optimized for project with very accurate image geolocation and orientation. This calibration method requires all images to be geolocated and oriented."\cite{pix4d_support1}  The Included images column refers to which images were used for post-processing (see section \ref{sec:overlap} for more information)
-The entire parameter space was repeated for the primary GPS (Piksi) and control GPS sensor (Ublox sensor) as to make 12 total possible post-processing parameter sets.
+In order to compare and analyze results from Pix4D, a total of 6 variations of settings and data 
+were selected for rendering as described in table \ref{table:postparams}.  The Calibration method 
+column refers to whether the "Standard" calibration method in Pix4d or the "Accurate Geolocation 
+and Orientation" methods were used.  According to Pix4d help documentation, the "Accurate" setting 
+is "Optimized for project with very accurate image geolocation and orientation. This calibration 
+method requires all images to be geolocated and oriented."\cite{pix4d_support1}  The Included 
+images column refers to which images were used for post-processing (see section \ref{sec:overlap} 
+for more information)
+The entire parameter space was repeated for the primary GPS (Piksi) and control GPS sensor (Ublox 
+sensor) as to make 12 total possible post-processing parameter sets.
 
 
 \begin{figure}
@@ -166,17 +242,23 @@ The entire parameter space was repeated for the primary GPS (Piksi) and control 
 Config & Description & Calibration Method & Included Images & GPS Sensor & Ground Control \\ \hline
 \rowstyle{}
 1  & Piksi RTK Std             & Standard  & All               & Piksi RTK (Fixed) & None \\ \hline
-2  & Piksi RTK Std low sidelap & Standard  & Every Other Line  & Piksi RTK (Fixed) & None   \\ \hline
+2  & Piksi RTK Std low sidelap & Standard  & Every Other Line  & Piksi RTK (Fixed) & None   \\ 
+\hline
 3  & Piksi RTK Std low overlap & Standard  & Every Other Image & Piksi RTK (Fixed) & None  \\ \hline
-4  & Piksi RTK Std GCP         & Accurate  & All               & Piksi RTK (Fixed) & 7 GCPs \\ \hline
+4  & Piksi RTK Std GCP         & Accurate  & All               & Piksi RTK (Fixed) & 7 GCPs \\ 
+\hline
 5  & Piksi RTK Acc             & Accurate  & All Images        & Piksi RTK (Fixed) & Nonoe \\ \hline
-6  & Piksi RTK Acc GCP         & Accurate  & All               & Piksi RTK (Fixed) & 7 GCPs \\ \hline
-7  & Ublox Std                 & Standard  & All               & Ublox             & None   \\ \hline
+6  & Piksi RTK Acc GCP         & Accurate  & All               & Piksi RTK (Fixed) & 7 GCPs \\ 
+\hline
+7  & Ublox Std                 & Standard  & All               & Ublox             & None   \\ 
+\hline
 8  & Ublox Std low sidelap     & Standard  & Every Other Line  & Ublox             & None \\ \hline
 9  & Ublox Std low overlap     & Standard  & Every Other Image & Ublox             & None  \\ \hline
-10 & Ublox Std GCP             & Standard  & All               & Ublox             & 7 GCPs \\ \hline
+10 & Ublox Std GCP             & Standard  & All               & Ublox             & 7 GCPs \\ 
+\hline
 11 & Ublox Acc                 & Accurate  & All               & Ublox             & None \\ \hline
-12 & Ublox Acc GCP             & Accurate  & All               & Ublox             & 7 GCPs \\ \hline
+12 & Ublox Acc GCP             & Accurate  & All               & Ublox             & 7 GCPs \\ 
+\hline
 \end{tabular}
 \caption{Post processing parameterization}
 \label{table:postparams}
@@ -253,13 +335,34 @@ Config & Description & Calibration Method & Included Images & GPS Sensor & Groun
 
 \subsection{Accuracy}
 
-Accuracy is very important when conducting a surveying mission. Ideally GCPs help post-processing softwares refine the scale and help align the images better. Without GCPs, Pix4D is unlikely to compute the true scale of the image unless image geo-referenceing information is very accurate. In order to evaluate the ability to correctly scale an image, the distance between 2 GCP markers in the post-processed image was used.  The calculated distances to the measured distance of 54.83 metres. There was little to no difference between the distance Piksi renderings showed compared to the ublox renderings. The hypothesis is that, if the data is within a threshold, Pix4D does not weight the image geolocation data and most of the stitching and scaling of the resultant point cloud or orthomosaic comes from image processing.
+Accuracy is very important when conducting a surveying mission. Ideally GCPs help post-processing 
+softwares refine the scale and help align the images better. Without GCPs, Pix4D is unlikely to 
+compute the true scale of the image unless image geo-referenceing information is very accurate. In 
+order to evaluate the ability to correctly scale an image, the distance between 2 GCP markers in 
+the post-processed image was used.  The calculated distances to the measured distance of 54.83 
+metres. There was little to no difference between the distance Piksi renderings showed compared to 
+the ublox renderings. The hypothesis is that, if the data is within a threshold, Pix4D does not 
+weight the image geolocation data and most of the stitching and scaling of the resultant point 
+cloud or orthomosaic comes from image processing.
 
-A technical contact at PixD suggested using the "Accurate Geolocation and Orientation" calibration methods in order to configure Pix4d to weigh more heavliy image geolocaiton information.
+A technical contact at PixD suggested using the "Accurate Geolocation and Orientation" calibration 
+methods in order to configure Pix4d to weigh more heavliy image geolocaiton information.
 
-Configuration 5, 6, 11 and 12 were rendered using "Accurate Geolocation and Orientation" settings in Pix4D.  It was expected that this calibration method would produce better orthomosaic and point cloud results, but thi was not the case. Observing Table \ref{table:qualityreport} , both Piksi and Ublox suffer from this setting. The RMS errors increase to a point that configuration 11 doesn't produce DSM or orthomosaic and configuration 12 doesn't render at all. In Figure \ref{ortho} the orthomosaics of Piksi clearly show the inaccuracy of renders with this setting compared to default settings.
+Configuration 5, 6, 11 and 12 were rendered using "Accurate Geolocation and Orientation" settings 
+in Pix4D.  It was expected that this calibration method would produce better orthomosaic and point 
+cloud results, but thi was not the case. Observing Table \ref{table:qualityreport} , both Piksi and 
+Ublox suffer from this setting. The RMS errors increase to a point that configuration 11 doesn't 
+produce DSM or orthomosaic and configuration 12 doesn't render at all. In Figure \ref{ortho} the 
+orthomosaics of Piksi clearly show the inaccuracy of renders with this setting compared to default 
+settings.
 
-The only possible theory to explains this behavior is that the inaccuracy of the orientation data dominates with this calibration method. Since the Pixhawk flight controller in the experiment has a relatively low quality MEMS IMU, it cannot be expected to have highly accurate attitude measurements during the flight.  Moreover it is possible that an error persisted in the conversion from aircraft Euler angles to the surveying frame (omega/phi/kappa) required by Pix4d.  The exact reason that this calibration method yielded poor results is unknown, but due to poor initial results it was not pursued.
+The only possible theory to explains this behavior is that the inaccuracy of the orientation data 
+dominates with this calibration method. Since the Pixhawk flight controller in the experiment has a 
+relatively low quality MEMS IMU, it cannot be expected to have highly accurate attitude 
+measurements during the flight.  Moreover it is possible that an error persisted in the conversion 
+from aircraft Euler angles to the surveying frame (omega/phi/kappa) required by Pix4d.  The exact 
+reason that this calibration method yielded poor results is unknown, but due to poor initial 
+results it was not pursued.
 
 \begin{table}[]
 \centering
@@ -290,11 +393,27 @@ Configuration & X Error [m] & Y Error [m] & Z Error [m] & Image calibrated [perc
 \subsection{Overlap/Sidelap}
 \label{sec:overlap}
 
-Surveying missions are typically flown with high overlap to yield hight quality photogrammetry results. Tools such as Pix4D are designed to favor image processing over geolocation information due to lack of accuracy in the commonly used GNSS systems on micro UAVs. The hypothesis is that with accurate geolocation data, the overlap percentage can be dropped without effecting the performance.
+Surveying missions are typically flown with high overlap to yield hight quality photogrammetry 
+results. Tools such as Pix4D are designed to favor image processing over geolocation information 
+due to lack of accuracy in the commonly used GNSS systems on micro UAVs. The hypothesis is that 
+with accurate geolocation data, the overlap percentage can be dropped without effecting the 
+performance.
 
-The mission was designed to have an overlap of 75 percent and a side lap of 60 percent. The idea behind these numbers was so that in post-processing we could eliminate entire lines from the flight path and images and still be able to process the data. As shown in the configuration table \ref(table:table:postparams) post-processing was performed after removing lines and after ignoring every other image. The removal of lines would effectively halve the sidelap percentage.  The removal of images would effectively halve the overlap percentage.
+The mission was designed to have an overlap of 75 percent and a side lap of 60 percent. The idea 
+behind these numbers was so that in post-processing we could eliminate entire lines from the flight 
+path and images and still be able to process the data. As shown in the configuration table 
+\ref(table:table:postparams) post-processing was performed after removing lines and after ignoring 
+every other image. The removal of lines would effectively halve the sidelap percentage.  The 
+removal of images would effectively halve the overlap percentage.
 
-Figure \ref{figure:rmserror} shows the mean RMS errors extracted from Pix4D quality reports for various configurations.As expected, both Piksi and Ublox experience significance increase in error when lines and images are removed. That said, the error magnitude with Piksi's geolocation information is smaller than that with Ublox. Additionally the number of images and the total area that was successfully surveyed is larger when Piksi's RTK geolocation information is used to georeference images. This analysis suggests that a more accurate GPS sensor can reduce the overlap and sidelap necessary for successful image processing and thus increase the area that can be surveyed in a given flight.
+Figure \ref{figure:rmserror} shows the mean RMS errors extracted from Pix4D quality reports for 
+various configurations.As expected, both Piksi and Ublox experience significance increase in error 
+when lines and images are removed. That said, the error magnitude with Piksi's geolocation 
+information is smaller than that with Ublox. Additionally the number of images and the total area 
+that was successfully surveyed is larger when Piksi's RTK geolocation information is used to 
+georeference images. This analysis suggests that a more accurate GPS sensor can reduce the overlap 
+and sidelap necessary for successful image processing and thus increase the area that can be 
+surveyed in a given flight.
 
 
 \begin{figure}
@@ -316,15 +435,29 @@ Figure \ref{figure:rmserror} shows the mean RMS errors extracted from Pix4D qual
 \end{figure}
 
 \subsection{Initial accuracy estimate investigation}
-One potential output to measure post-processing quality is the RMS errors reported by Pix4d Software which come from the "Initial processing" step of the software.  Indeed, this paper, and the marketing material of some vendors and other parts of the literature use this image processing output as a key metric in evaluating the quality of geolocation surveying data.
+One potential output to measure post-processing quality is the RMS errors reported by Pix4d 
+Software which come from the "Initial processing" step of the software.  Indeed, this paper, and 
+the marketing material of some vendors and other parts of the literature use this image processing 
+output as a key metric in evaluating the quality of geolocation surveying data.
 
-In this analysis, however, the RMS errors values seemed highly affected by the image geolocation "accuracy" estimates are initially provided to the software by the user as input.  This outcome was peculiar and unexplained.  This odd relationship is presented in table [TABLE HERE]. The table shows three identical post-processing runs where the only difference was the accuracy estimate.  As this accuracy estimate decreased, the image location errors as reported in the Pix4d quality report decreased as well.  This behavior suggests that the accuracy reported by Pix4d for geolocation information is more an artifact of post-processing than representing something physical.  For this paper the default initial accuracies were used as to control for this behavior.  As an additional note, in certain cases when these initial accuracy values are constrained to values below the accuracy of the sensors used for geo-referenceing, the software is unable to perform initial processing.
+In this analysis, however, the RMS errors values seemed highly affected by the image geolocation 
+"accuracy" estimates are initially provided to the software by the user as input.  This outcome was 
+peculiar and unexplained.  This odd relationship is presented in table [TABLE HERE]. The table 
+shows three identical post-processing runs where the only difference was the accuracy estimate.  As 
+this accuracy estimate decreased, the image location errors as reported in the Pix4d quality report 
+decreased as well.  This behavior suggests that the accuracy reported by Pix4d for geolocation 
+information is more an artifact of post-processing than representing something physical.  For this 
+paper the default initial accuracies were used as to control for this behavior.  As an additional 
+note, in certain cases when these initial accuracy values are constrained to values below the 
+accuracy of the sensors used for geo-referenceing, the software is unable to perform initial 
+processing.
  % images processed  2d keypoints mean RMS Error [m] X RMS Error [m] Y RMS Error [m] Z
 
 
 \begin{tabular}{l ^ c ^ c ^ l ^ l ^c ^c ^c} \hline
 \rowstyle{\bfseries}
-Label & \multicolumn{2}{^c}{Initial Image Accuracy [m]}  & Images & 2d keypoints & \multicolumn{3}{^c}{Mean RMS Error [m]} \\
+Label & \multicolumn{2}{^c}{Initial Image Accuracy [m]}  & Images & 2d keypoints & 
+\multicolumn{3}{^c}{Mean RMS Error [m]} \\
 &   X,Y & Z & processed (\%) & & X & Y & Z  \\ \hline
 \rowstyle{}
 a  &5   &10  &84  &5902  &0.184857  &0.136434  &0.273608 \\ \hline
@@ -338,12 +471,17 @@ Conclusions here
 \subsection{Next Steps}
 \begin{thebibliography}{9}
 \bibitem{sensefly1}
-Strechha,  Christophe (2011). "The Accuracy of Automatic Photogrammetric Techniques on Ultra-Light UAV Imagery." \texit{UAV-g 2011 - Unmanned Aerial Vehicle in Geomatics.} Zürich, CH, September 14-16, 2011
+Strechha,  Christophe (2011). "The Accuracy of Automatic Photogrammetric Techniques on Ultra-Light 
+UAV Imagery." \texit{UAV-g 2011 - Unmanned Aerial Vehicle in Geomatics.} Zürich, CH, September 
+14-16, 2011
 \bibitem{sensefly2}
 A. Roze, J-C. Zufferey, A. Beyeler, A. McClellan \textit{eBee RTK Accuracy Assessment}.
-Retrieved from \url{https://www.sensefly.com/fileadmin/user_upload/sensefly/documents/eBee-RTK-Accuracy-Assessment.pdf}
+Retrieved from 
+\url{https://www.sensefly.com/fileadmin/user_upload/sensefly/documents/eBee-RTK-Accuracy-Assessment.
+pdf}
 \bibitem{pix4d_support1}
-"Menu Process Processing Options... 1. Initial Processing Calibration." Pix4d. Retrieved March 24, 2016, from \url{https://support.pix4d.com/hc/en-us/articles/205327965#label2&gsc.tab=0}
+"Menu Process Processing Options... 1. Initial Processing Calibration." Pix4d. Retrieved March 24, 
+2016, from \url{https://support.pix4d.com/hc/en-us/articles/205327965#label2&gsc.tab=0}
 \end{thebibliography}
 \thispagestyle{lastpage}
 \end{document}
