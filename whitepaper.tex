@@ -132,9 +132,8 @@ Weight                & 2942 g               \\ \hline
 
 \begin{table}[]
 \centering
-\begin{tabular}{|l|c|}  \\ \hline
+\begin{tabular}{l^l} 
 \hline
-\rowstyle{\bfseries}
 \rowstyle{}
 Primary GPS         & Piksi v2.3.1       \\ \hline
 Secondary GPS       & U-Blox NEO 7N      \\ \hline
@@ -402,7 +401,7 @@ performance.
 The mission was designed to have an overlap of 75 percent and a side lap of 60 percent. The idea 
 behind these numbers was so that in post-processing we could eliminate entire lines from the flight 
 path and images and still be able to process the data. As shown in the configuration table 
-\ref(table:table:postparams) post-processing was performed after removing lines and after ignoring 
+\ref{table:postparams} post-processing was performed after removing lines and after ignoring 
 every other image. The removal of lines would effectively halve the sidelap percentage.  The 
 removal of images would effectively halve the overlap percentage.
 
@@ -442,18 +441,21 @@ output as a key metric in evaluating the quality of geolocation surveying data.
 
 In this analysis, however, the RMS errors values seemed highly affected by the image geolocation 
 "accuracy" estimates are initially provided to the software by the user as input.  This outcome was 
-peculiar and unexplained.  This odd relationship is presented in table [TABLE HERE]. The table 
-shows three identical post-processing runs where the only difference was the accuracy estimate.  As 
-this accuracy estimate decreased, the image location errors as reported in the Pix4d quality report 
-decreased as well.  This behavior suggests that the accuracy reported by Pix4d for geolocation 
-information is more an artifact of post-processing than representing something physical.  For this 
-paper the default initial accuracies were used as to control for this behavior.  As an additional 
-note, in certain cases when these initial accuracy values are constrained to values below the 
-accuracy of the sensors used for geo-referenceing, the software is unable to perform initial 
-processing.
+peculiar and unexplained.  This odd relationship is presented in table \ref{table:accuracy}. The 
+table shows three identical post-processing runs where the only difference was the accuracy 
+estimate.  As this accuracy estimate decreased, the image location errors as reported in the Pix4d 
+quality report decreased as well.  This behavior suggests that the accuracy reported by Pix4d for 
+geolocation information is more an artifact of post-processing than representing something 
+physical.  For this paper the default initial accuracies were used as control for this behavior.  As
+an additional note, in certain cases when these initial accuracy values are constrained to values 
+below the accuracy of the sensors used for geo-referenceing, the software is unable to perform 
+initial processing.
+
+
  % images processed  2d keypoints mean RMS Error [m] X RMS Error [m] Y RMS Error [m] Z
 
-
+\begin{table}[]
+\centering
 \begin{tabular}{l ^ c ^ c ^ l ^ l ^c ^c ^c} \hline
 \rowstyle{\bfseries}
 Label & \multicolumn{2}{^c}{Initial Image Accuracy [m]}  & Images & 2d keypoints & 
@@ -464,6 +466,9 @@ a  &5   &10  &84  &5902  &0.184857  &0.136434  &0.273608 \\ \hline
 b  &0.2 &1   &84  &5907  &0.126739  &0.097678  &0.163582 \\ \hline
 c  &0.1 &0.2 &84  &5887  &0.061538  &0.06066   &0.111367 \\ \hline
 \end{tabular}
+\caption{Initial Accuracy Estimate Data}
+\label{table:accuracy}
+\end{table}
 
 \section{Conclusions}
 Conclusions here
