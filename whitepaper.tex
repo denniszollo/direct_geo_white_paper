@@ -267,7 +267,7 @@ Config & Description & Calibration Method & Included Images & GPS Sensor & Groun
 \end{table}
 
 \section{Results}
-THe survey mission and the various post-processing techniques provided typical UAV survey results.  Most images were calibrated and stiched together to create survey outputs such as orthomosaics, digital elevation models, and point clouds.  In the section that follows, the resultant outputs are analyzed as to understand how improved GPS accuracy and different post-processing strategies can affect quality.
+The survey mission and the various post-processing techniques provided typical UAV survey results.  Most images were calibrated and stitched together to create survey outputs such as orthomosaics, digital elevation models, and point clouds.  In the section that follows, the resultant outputs are analyzed as to understand how improved GPS accuracy ground control, and different post-processing strategies can affect their quality.
 \begin{figure}
 \centering
 \renewcommand*\thesubfigure{\arabic{subfigure}}
@@ -337,35 +337,31 @@ THe survey mission and the various post-processing techniques provided typical U
 
 \subsection{Accuracy}
 
-Accuracy is very important when conducting a surveying mission. Ideally GCPs help post-processing
-softwares refine the scale and help align the images better. Without GCPs, Pix4D is unlikely to
-compute the true scale of the image unless image geo-referenceing information is very accurate. In
-order to evaluate the ability to correctly scale an image, the distance between 2 GCP markers in
-the post-processed image was used.  The calculated distances to the measured distance of 54.83
-metres. There was little to no difference between the distance Piksi renderings showed compared to
-the ublox renderings. The hypothesis is that, if the data is within a threshold, Pix4D does not
-weight the image geolocation data and most of the stitching and scaling of the resultant point
-cloud or orthomosaic comes from image processing.
-
+Accuracy in surveying data can be defined as both the relative accuracy between locations in the scene
+and absolute accuracy in placing the data on earth. Ground control points (GCPs) and accurate image geotagging can help post-processing softwares with both aims.
+In order to evaluate the ability to correctly scale an image, the distance between 2 GCP markers in
+the post-processed image was used.  This measurement could be a proxy for many surveying outputs
+as well as volumetric measurements.  For this analysis, the distance between ground control point
+1 and ground control point 8 was used.  This distance was surveyed in advance to be 54.83
+metres. There was little to no difference between the distance as calculated from the survey outputs
+between any of the post-processing configurations. It is hypothesized that if geolocation information quality is within a threshold, Pix4D does not weigh the image geolocation data and most image scaling information comes from image processing.  Thus there were no clear gains from an RTK GPS sensor with respect to relative measurements in images.
+The ground control points used as 3d Checkpoints were attempted to be used to evaluate the absolute positioning of survey outputs with respect to the earth.  However this method yielded inconclusive results that suggested problems in the surveyed positions of ground control points.
+\subsection{Accurate Calibration Method}
 A technical contact at PixD suggested using the "Accurate Geolocation and Orientation" calibration
 methods in order to configure Pix4d to weigh more heavliy image geolocaiton information.
-
-Configuration 5, 6, 11 and 12 were rendered using "Accurate Geolocation and Orientation" settings
-in Pix4D.  It was expected that this calibration method would produce better orthomosaic and point
-cloud results, but thi was not the case. Observing Table \ref{table:qualityreport} , both Piksi and
-Ublox suffer from this setting. The RMS errors increase to a point that configuration 11 doesn't
-produce DSM or orthomosaic and configuration 12 doesn't render at all. In Figure \ref{ortho} the
-orthomosaics of Piksi clearly show the inaccuracy of renders with this setting compared to default
-settings.
-
-The only possible theory to explains this behavior is that the inaccuracy of the orientation data
-dominates with this calibration method. Since the Pixhawk flight controller in the experiment has a
+Configuration 5, 6, 11 and 12 (shaded in table \ref{table:qualityreport}) were rendered
+using "Accurate Geolocation and Orientation" settings in Pix4D.  It was expected that this
+calibration method would produce better orthomosaic and point
+cloud results, but the results were qualitatively worse. Observing Table \ref{table:qualityreport},
+both Piksi and Ublox show increased errors. The RMS errors increase to a point that configuration 11 doesn't
+produce DSM or orthomosaic and configuration 12 cannot perform initial image calibration and thus are omitted from the results.  In Figure \ref{ortho} the orthomosaics of Piksi clearly show that the orthomosaics with the accurate calibration method cover less area compared to default settings.  The digital elevation models produced from the accurate calibration method yielded strage artifiacts.
+One possible theory to explain the behavior is that the inaccuracy of the orientation data
+starts to dominate in with this calibration method. Since the Pixhawk flight controller in the experiment has a
 relatively low quality MEMS IMU, it cannot be expected to have highly accurate attitude
 measurements during the flight.  Moreover it is possible that an error persisted in the conversion
 from aircraft Euler angles to the surveying frame (omega/phi/kappa) required by Pix4d.  The exact
-reason that this calibration method yielded poor results is unknown, but due to poor initial
-results it was not pursued.
-
+reason that this calibration method yielded poor results is unknown, but it is presented as a finding
+to pose the question.
 \begin{table}[]
 \centering
 \begin{tabular}{l ^ l ^ l ^ l ^ l} \hline
@@ -376,26 +372,29 @@ Configuration & X Error [m] & Y Error [m] & Z Error [m] & Image calibrated [perc
 2 & 0.653 & 0.552 & 1.056 & 64    \\ \hline
 3 & 0.847 & 1.182 & 1.202 & 59  \\ \hline
 4 & 0.076 & 0.089 & 0.011 & 85    \\ \hline
+\cellcolor[gray]{0.8}
 5 & 0.556 & 0.619 & 0.989 & 99  \\ \hline
+\cellcolor[gray]{0.8}
 6 & 0.277 & 0.073 & 0.723 & 95   \\ \hline
 7 & 0.202 & 0.840 & 0.563 & 82   \\ \hline
 8 & 3.075 & 1.842 & 1.255 & 64   \\ \hline
 9 & 2.191 & 3.028 & 1.897 & 57  \\ \hline
 10 & 0.086 & 0.096 & 0.024 & 81   \\ \hline
+\cellcolor[gray]{0.8}
 11 & 0.500 & 0.625 & 0.959 & 99   \\ \hline
+\cellcolor[gray]{0.8}
 12 & \multicolumn{4}{^c}{Would Not Render} \\ \hline
 \end{tabular}
+
+Configurations with gray cells use the "accurate geolocation and orientation" calibration method
 \caption{Pix4D Quality Report Error and Camera Calibration Data}
 \label{table:qualityreport}
 \end{table}
 
-
-
-
 \subsection{Overlap/Sidelap}
 \label{sec:overlap}
 
-Surveying missions are typically flown with high overlap to yield hight quality photogrammetry
+Surveying missions are typically flown with high overlap to yield high quality photogrammetry
 results. Tools such as Pix4D are designed to favor image processing over geolocation information
 due to lack of accuracy in the commonly used GNSS systems on micro UAVs. The hypothesis is that
 with accurate geolocation data, the overlap percentage can be dropped without effecting the
@@ -477,14 +476,14 @@ c  &0.1 &0.2 &84  &5887  &0.061538  &0.06066   &0.111367 \\ \hline
 Conclusions here
 \subsection{Issues}
 \subsection{Next Steps}
-Surveying a crop field and other landmarks is a very daunting task. It requires expensive equipment 
-and skills to understand and produce valuable data. MAVs bring all these tools to the people in an 
-affordable and easy to understand fashion. In attempt to prove the benefit of accurate geotags for 
-aerial surveyed data, a wide room of improvement was realized. First and foremost, one of the 
-limiting factors for this project was the closed nature of Pix4D. Many of the results could have 
-been better explained if Pix4D's rendering process was explained. Features such as initial accuracy 
-and orientation inputs(omega/phi/kappa) had unexplained roles in the rendering process. For future 
-development, either switching to a different post processing tool (Agisoft PhotoScan or Visual 
+Surveying a crop field and other landmarks is a very daunting task. It requires expensive equipment
+and skills to understand and produce valuable data. MAVs bring all these tools to the people in an
+affordable and easy to understand fashion. In attempt to prove the benefit of accurate geotags for
+aerial surveyed data, a wide room of improvement was realized. First and foremost, one of the
+limiting factors for this project was the closed nature of Pix4D. Many of the results could have
+been better explained if Pix4D's rendering process was explained. Features such as initial accuracy
+and orientation inputs(omega/phi/kappa) had unexplained roles in the rendering process. For future
+development, either switching to a different post processing tool (Agisoft PhotoScan or Visual
 Surveyor) or understanding Pix4D deeply would be of best choice. 
 
 
