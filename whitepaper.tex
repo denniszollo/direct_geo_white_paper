@@ -475,6 +475,17 @@ c  &0.1 &0.2 &84  &5887  &0.061538  &0.06066   &0.111367 \\ \hline
 \section{Conclusions}
 Conclusions here
 \subsection{Issues}
+Many problems presented themselves during the analysis journey. One of the first mistakes realized
+had to do with the flying speed. Part of the post processing procedure involves comparing the number
+of CAM (Pixhawk's camera trigger) messages to the MSG\_EXT\_EVENT(Piksi's trigger) messages. Having
+a greater number of Pixhawk trigger messages than Piksi meant the mission was flown too fast for the
+camera.
+
+Moreover, while executing renders with GCP markers, not many tie points were found for most of the
+GCPs. Considering Figure \ref{postprocess} it can be seen that most of the GCPs were placed on the
+edge of the mission range. This made it difficult for Pix4D to accurately define and use these
+points for the processing procedure.
+
 \subsection{Next Steps}
 Surveying a crop field and other landmarks is a very daunting task. It requires expensive equipment
 and skills to understand and produce valuable data. MAVs bring all these tools to the people in an
@@ -483,8 +494,16 @@ aerial surveyed data, a wide room of improvement was realized. First and foremos
 limiting factors for this project was the closed nature of Pix4D. Many of the results could have
 been better explained if Pix4D's rendering process was explained. Features such as initial accuracy
 and orientation inputs(omega/phi/kappa) had unexplained roles in the rendering process. For future
-development, either switching to a different post processing tool (Agisoft PhotoScan or Visual
-Surveyor) or understanding Pix4D deeply would be of best choice. 
+development, either switching to a different post processing tool (Agisoft PhotoScan or Visual 
+Surveyor) or understanding Pix4D deeply would be of best choice.
+
+
+Reflecting from some of the issues mentioned in the above section \ref{Issues}, if this surveying
+mission were to happen again, many things would be done differently. Flight speed would be reduced
+to compensate for the slow speed of the camera despite the fact that the same mission would take a
+bit longer to execute. Moreover, the ground control points would be placed more inland from the
+edges of the mission range. This would ensure that all the GCPs have sufficient data to help with
+the rendering.
 
 
 
