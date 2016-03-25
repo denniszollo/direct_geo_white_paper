@@ -94,7 +94,9 @@ Weight                & 2942 g               \\ \hline
 \centering
 \begin{tabular}{|l|c|}
 \hline
+\rowstyle{\bfseries}
 \multicolumn{2}{|c|}{GPS Specifications} \\ \hline
+\rowstyle{}
 Primary GPS         & Piksi v2.3.1       \\ \hline
 Secondary GPS       & U-Blox NEO 7N      \\ \hline
 Primary Antenna     & Tellysman TW2412   \\ \hline
@@ -135,32 +137,27 @@ When conducting a surveying mission, it is very important to configure the vehic
 The mission analyzed in this paper was designed with UAV surveying standards in mind. With a 75 percent overlap and 60 percent sidelap, the vehicle flew for approximately 22 minutes to capture 218 images. The copter in this mission was flown at 20m altitude which in theory gives a 2.37 mm GSD. Pix4D reported an average GSD of 4.9 mm due to the terrain change and altitude variations of the vehicle during the mission. Figure \ref{flightplan} shows the flight plan of the copter and the locations of the ground control points.
 
 \begin{figure}
-\begin{center}
 \includegraphics[width=5in]{images/flight_plan_gcp.png}
 \caption{Flight plan visualization}
 \label{flightplan}
-\end{center}
 \end{figure}
 
 To get the best quality possible, it was also necessary to configure the camera settings appropriately. During some of the initial testing, many of the images were coming out blurry. In order to compensate for the continuous movement of the copter and the vibrations, a constant shutter speed of 1/1250 sec was selected. The aperture settings were auto selected by the camera. This resulted in sharp and detailed images.
 
 \section{Post-Processing Techniques}
-\label{sec:postprocessing}
-Post processing tools were developed in house for this project. Images captures from the camera were not individually tagged. Instead , a file with the image names, Piksi geo-loacaiton data (WGS84) , orientation data (omega, phi, kappa) and accuracy (default of 5m horizontal and 10m vertical) was generated. This file was fed into Pix4D along with the images. Even though 7 GCPs (Ground Control Points) were measured, none were used in the processing.
+\label{sec:epostprocessing}
+Post processing tools were developed in house for this project. Images captures from the camera were not individually tagged. Instead , a file with the image names, Piksi geo-loacaiton data (WGS84) , orientation data (omega/phi/kappa) and accuracy (default of 5m horizontal and 10m vertical) was generated. This file was fed into Pix4D along with the images.
 
-Figure \ref{postprocess} shows the basic layout of the post-processing routines as to allow the methods to be reproduced.  Georeference-process.py is a top-level python script that processes the data and generates a .csv file with image Geolocations that can be consumed by Pix4d. There are other scripts within that carry out individual tasks. Mavlink-decode.py extracts the piksi log file (SBP JSON) from the dataflash BIN log file created by the Pixhawk. Interpolate-event.py linearly interpolates the position data at the trigger points using the SBP log file. Query-mavlink.py is used to extract the attitude data at each shutter time. This attitude data is converted from Euler angle centi-degrees to the surveying coordinate frame (omega/phi/kappa) in a subroutine in Georeference-process.py. All this data is then compiled into a csv file formate specified by Pix4d with a Geolocation and camera attitude for each image.  All scripts are open-source software available from Swift Navigation's Github repositories \url{http://github.com/swift-nav}
-
+Figure \ref{postprocess} shows the basic layout of the post-processing routines as to allow the methods to be reproduced.  Georeference-process.py is a top-level python script that processes the data and generates a .csv file with image geolocations that can be consumed by Pix4d. There are other scripts within that carry out individual tasks. Mavlink-decode.py extracts the piksi log file (SBP JSON) from the dataflash BIN log file created by the Pixhawk. Interpolate-event.py linearly interpolates the position data at the trigger points using the SBP log file. Query-mavlink.py is used to extract the attitude data at each shutter time. This attitude data is converted from Euler angle centi-degrees to the surveying coordinate frame (omega/phi/kappa) in a subroutine in Georeference-process.py. All this data is then compiled into a csv file formate specified by Pix4d with a Geolocation and camera attitude for each image.  All scripts are open-source software available from Swift Navigation's Github repositories \url{http://github.com/swift-nav}
 \section{Photogrammetry parameters}
-In order to compare and analyze results from Pix4D, a total of 12 variations of settings and data were selected for rendering as described in table \ref{table:postparams}.  The Calibration method column refers to whether the "Standard" calibration method in Pix4d or the "Accurate Geolocation and Orientation" methods were used.  According to Pix4d help documentation, the "Accurate" setting is "Optimized for project with very accurate image geolocation and orientation. This calibration method requires all images to be geolocated and oriented."\cite{pix4d_support1}  The Included images column refers to which images were used for post-processing (see section \ref{sec:overlap} for more information)
-The entire parameter space was repeated for the primary GPS (Piksi) and control GPS sensor (Ublox sensor).
+In order to compare and analyze results from Pix4D, a total of 6 variations of settings and data were selected for rendering as described in table \ref{table:postparams}.  The Calibration method column refers to whether the "Standard" calibration method in Pix4d or the "Accurate Geolocation and Orientation" methods were used.  According to Pix4d help documentation, the "Accurate" setting is "Optimized for project with very accurate image geolocation and orientation. This calibration method requires all images to be geolocated and oriented."\cite{pix4d_support1}  The Included images column refers to which images were used for post-processing (see section \ref{sec:overlap} for more information)
+The entire parameter space was repeated for the primary GPS (Piksi) and control GPS sensor (Ublox sensor) as to make 12 total possible post-processing parameter sets.
 
 
 \begin{figure}
-\begin{center}
 \includegraphics[width=7in]{images/flow_charts/uav_survey_processing_architecture.png}
 \caption{Post Processing Architecture}
 \label{postprocess}
-\end{center}
 \end{figure}
 
 \begin{table}
@@ -184,7 +181,6 @@ Config & Description & Calibration Method & Included Images & GPS Sensor & Groun
 \caption{Post processing parameterization}
 \label{table:postparams}
 \end{table}
-
 
 \begin{figure}
 \centering
@@ -249,19 +245,23 @@ Config & Description & Calibration Method & Included Images & GPS Sensor & Groun
   \caption{Ublox with GCPs}
   \label{fig:sub1}
 \end{subfigure}%
+\caption{Orthomosaics of Different Configuration Renderings}
+\label{ortho}
 \end{figure}
 
 \section{Results: Accuracy}
 talk about accuracy of each method
 
-Accuracy is very important when conducting a surveying mission. Ideally GCPs help post-procesing softwares refine the scale and help align the images better. Without GCPs , Pix4D would have a hard time computing the true scale of the image unless the geo-tags were really accurate. In order to test the accuracy of Piksi , we setup a test where we used Pix4D to measure the distance between 2 GCP markers. As shown in Figure ?? , these markers were red and white. Before the mission we collected the locations of these markers very accurately. Using some post-processing tools, we compared the calculated distances to the measured distance of 54.83 metres. There was little to no difference between the distance Piksi renderings showed compared to the ublox renderings. The hypothesis is that, if the data is within a threshold, Pix4D considers the geolocation data minutely. Most of the stitching and scaling is done from image processing.
+Accuracy is very important when conducting a surveying mission. Ideally GCPs help post-procesing softwares refine the scale and help align the images better. Without GCPs , Pix4D would have a hard time computing the true scale of the image unless the geo-tags were really accurate. In order to test the accuracy of Piksi , we setup a test where we used Pix4D to measure the distance between 2 GCP markers. Using some post-processing tools, we compared the calculated distances to the measured distance of 54.83 metres. There was little to no difference between the distance Piksi renderings showed compared to the ublox renderings. The hypothesis is that, if the data is within a threshold, Pix4D considers the geolocation data minutely. Most of the stitching and scaling is done from image processing.
 
 In pursuite of finding a way to give more significance to the geolocation data, [andrew scited] from PixD suggested using the "Accurate Geolocation and Orientation" setting. Found in the settings section, this parameter allows Pix4D to rely more on the geolocation and orientation data provided by the user.
 
-Configuration 5, 6, 11 and 12 were rendered using "Accurate Geoloaction and Orientation" settings in Pix4D. One would think that using this setting would produce better results; however the results say otherwise. Observing table ?? , both Piksi and Ublox suffer from this setting. The RMS errors increase to a point that configuration 11 doesn't produce DSM or otrhomosaic and configuration 12 doesn't render at all. In Figure ?? the orthomosaics of Piksi clearly show the inaccuracy of renders with this setting compared to default settings. The mosaic of configuration 5 is literally half the area compared to configuration 1.
+Configuration 5, 6, 11 and 12 were rendered using "Accurate Geoloaction and Orientation" settings in Pix4D. One would think that using this setting would produce better results; however the results say otherwise. Observing Table \ref{quality report data} , both Piksi and Ublox suffer from this setting. The RMS errors increase to a point that configuration 11 doesn't produce DSM or otrhomosaic and configuration 12 doesn't render at all. In Figure \ref{ortho} the orthomosaics of Piksi clearly show the inaccuracy of renders with this setting compared to default settings.
 
 The only theory that explains this behavior is the orientation data. Since the Pixhawk flight controller have a mems IMU, it brings about a lot of error in the orientation. Moreover the conversion in Pix4D from centidegrees to omega/phi/kappa is questionable. Therefor the only logical source of error is bad orientation data which Pix4D heavily relies upon. Unfortunately there is no known way to ONLY use the geolocation data. Therefor, this effort to improve accuracy was dropped.
 
+\begin{table}[]
+\centering
 \begin{tabular}{l ^ l ^ l ^ l ^ l} \hline
 \rowstyle{\bfseries}
 Configuration & X Error [m] & Y Error [m] & Z Error [m] & Image calibrated [percent]   \\ \hline
@@ -279,16 +279,19 @@ Configuration & X Error [m] & Y Error [m] & Z Error [m] & Image calibrated [perc
 11 & 0.500 & 0.625 & 0.959 & 99   \\ \hline
 12 & WOULD & NOT & RENDER   \\ \hline
 \end{tabular}
+\caption{Pix4D Quality Report Error and Camera Calibration Data}
+\label{quality report data}
+\end{table}
 
 
 
 
 \section{Results: Overlap/Sidelap}
 \label{sec:overlap}
-Currently, surveying missions are flown with 70 to 80 percent overlap to get decent results from their data. The purpose of this high overlap is so that the user can collect plenty of data for the post-processing tools. Tools such as Pix4D are designed to favor image processing over geolocation information due to lack of accuracy in the commonly used GNSS systems on micro UAVs. The hypothesis
-is that with accurate geolocation data, the overlap percentage can be dropped without effecting the performance.
 
-The mission was designed to have an overlap of 75 percent and a side lap of 60 percent. The idea behind these numbers was so that in post processing we could eliminate lines and images and still be able to process the data. Figure ?? shows the errors extracted from Pix4D quality reports for various configurations. Both Piksi and Ublox experience significance increase in error when lines and images are removed. That being said, the magnitude of Piksi's error is magnitudes smaller than of Ublox.
+Currently, surveying missions are flown with 70 to 80 percent overlap to get decent results from the data collected. The purpose of this high overlap is so that the user can collect plenty of data for the post-processing tools. Tools such as Pix4D are designed to favor image processing over geolocation information due to lack of accuracy in the commonly used GNSS systems on micro UAVs. The hypothesis is that with accurate geolocation data, the overlap percentage can be dropped without effecting the performance.
+
+The mission was designed to have an overlap of 75 percent and a side lap of 60 percent. The idea behind these numbers was so that in post processing we could eliminate lines and images and still be able to process the data. Figure \ref{rms error} shows the mean RMS errors extracted from Pix4D quality reports for various configurations. Both Piksi and Ublox experience significance increase in error when lines and images are removed. That being said, the value of Piksi's error is magnitudes smaller than of Ublox.
 
 
 \begin{figure}
@@ -305,6 +308,8 @@ The mission was designed to have an overlap of 75 percent and a side lap of 60 p
   \caption{Ublox}
   \label{fig:sub2}
 \end{subfigure}%
+\caption{Piksi and Ublox RMS Error }
+\label{rms error}
 \end{figure}
 
 \section{Results: Initial accuracy estimate investigation}
@@ -312,6 +317,7 @@ One potential output to measure post-processing quality is the RMS errors report
 
 In this analysis, however, the RMS errors values seemed highly affected by the image geolocation "accuracy" estimates are initially provided to the software by the user as input.  This outcome was peculiar and unexplained.  This odd relationship is presented in table [TABLE HERE]. The table shows three identical post-processing runs where the only difference was the accuracy estimate.  As this accuracy estimate decreased, the image location errors as reported in the Pix4d quality report decreased as well.  This behavior suggests that the accuracy reported by Pix4d for geolocation information is more an artifact of post-processing than representing something physical. As an additional note, in certain cases when these initial accuracy values are constrained to values below the accuracy of the sensors used for geo-referenceing, the software is unable to perform initial processing.
  % images processed  2d keypoints mean RMS Error [m] X RMS Error [m] Y RMS Error [m] Z
+
 
 \begin{tabular}{l ^ c ^ c ^ l ^ l ^c ^c ^c} \hline
 \rowstyle{\bfseries}
@@ -331,7 +337,7 @@ A. Roze, J-C. Zufferey, A. Beyeler, A. McClellan \textit{eBee RTK Accuracy Asses
 Retrieved from \url{https://www.sensefly.com/fileadmin/user_upload/sensefly/documents/eBee-RTK-Accuracy-Assessment.pdf}
 
 \bibitem{pix4d_support1}
-"Menu Process Processing Options... 1. Initial Processing Calibration." Pix4d. Retrieved March 24, 2016, from https://support.pix4d.com/hc/en-us/articles/205327965#label2&gsc.tab=0
+"Menu Process Processing Options... 1. Initial Processing Calibration." Pix4d. Retrieved March 24, 2016, from \url{https://support.pix4d.com/hc/en-us/articles/205327965#label2&gsc.tab=0}
 \end{thebibliography}
 \thispagestyle{lastpage}
 \end{document}
