@@ -335,6 +335,74 @@ The survey mission and the various post-processing techniques provided typical U
 \label{ortho}
 \end{figure}
 
+
+\begin{figure}
+\centering
+\renewcommand*\thesubfigure{\arabic{subfigure}}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.72\linewidth]{images/DSM/p.png}
+  \caption{Piksi all images}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.72\linewidth]{images/DSM/p_every_other_line.png}
+  \caption{Piksi every other line}
+  \label{fig:sub2}
+\end{subfigure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.72\linewidth]{images/DSM/p_every_other_image.png}
+  \caption{Piksi Every Other Image}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.72\linewidth]{images/DSM/p_gcp.png}
+  \caption{Piksi with GCPs}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.72\linewidth]{images/DSM/p_accurate.png}
+  \caption{Piksi Accuracy }
+  \label{fig:sub2}
+\end{subfigure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.72\linewidth]{images/DSM/p_gcp_accurate.png}
+  \caption{Piksi Accuracy with GCPs}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.72\linewidth]{images/DSM/ublox.png}
+  \caption{Ublox All Images}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.72\linewidth]{images/DSM/ublox_every_other_line.png}
+  \caption{Ublox Every Other Line}
+  \label{fig:sub2}
+\end{subfigure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.72\linewidth]{images/DSM/ublox_every_other_image.png}
+  \caption{Ublox Every Other Image}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.72\linewidth]{images/DSM/ublox_gcp.png}
+  \caption{Ublox with GCPs}
+  \label{fig:sub1}
+\end{subfigure}%
+\caption{Digital Surface Model (DSM) of Different Configurations}
+\label{dem}
+\end{figure}
+
 \subsection{Accuracy}
 
 Accuracy in surveying data can be defined as both the relative accuracy between locations in the scene
@@ -400,15 +468,14 @@ due to lack of accuracy in the commonly used GNSS systems on micro UAVs. The hyp
 with accurate geolocation data, the overlap percentage can be dropped without effecting the
 performance.
 
-The mission was designed to have an overlap of 75 percent and a side lap of 60 percent. The idea
-behind these numbers was so that in post-processing we could eliminate entire lines from the flight
-path and images and still be able to process the data. As shown in the configuration table
+The mission was designed to have an overlap of 75 percent and a side lap of 60 percent. 
+As shown in the configuration table
 \ref{table:postparams} post-processing was performed after removing lines and after ignoring
 every other image. The removal of lines would effectively halve the sidelap percentage.  The
 removal of images would effectively halve the overlap percentage.
 
 Figure \ref{figure:rmserror} shows the mean RMS errors extracted from Pix4D quality reports for
-various configurations.As expected, both Piksi and Ublox experience significance increase in error
+various configurations.  As expected, both Piksi and Ublox experience significance increase in error
 when lines and images are removed. That said, the error magnitude with Piksi's geolocation
 information is smaller than that with Ublox. Additionally the number of images and the total area
 that was successfully surveyed is larger when Piksi's RTK geolocation information is used to
@@ -438,7 +505,7 @@ surveyed in a given flight.
 \subsection{Initial accuracy estimate investigation}
 One potential output to measure post-processing quality is the RMS errors reported by Pix4d
 Software which come from the "Initial processing" step of the software.  Indeed, this paper, and
-the marketing material of some vendors and other parts of the literature use this image processing
+the marketing material of some vendors and other parts of the literature, use this image processing
 output as a key metric in evaluating the quality of geolocation surveying data.
 
 In this analysis, however, the RMS errors values seemed highly affected by the image geolocation
@@ -450,9 +517,8 @@ quality report decreased as well.  This behavior suggests that the accuracy repo
 geolocation information is more an artifact of post-processing than representing something
 physical.  For this paper the default initial accuracies were used as control for this behavior.  As
 an additional note, in certain cases when these initial accuracy values are constrained to values
-below the accuracy of the sensors used for geo-referenceing, the software is unable to perform
+below the accuracy of the sensors used for georeferenceing, the software is unable to perform
 initial processing.
-
 
  % images processed  2d keypoints mean RMS Error [m] X RMS Error [m] Y RMS Error [m] Z
 
@@ -495,7 +561,6 @@ and orientation inputs(omega/phi/kappa) had unexplained roles in the rendering p
 development, either switching to a different post processing tool (Agisoft PhotoScan or Visual 
 Surveyor) or understanding Pix4D deeply would be of best choice.
 
-
 Reflecting from some of the issues mentioned in the above section \ref{Issues}, if this surveying
 mission were to happen again, many things would be done differently. Flight speed would be reduced
 to compensate for the slow speed of the camera despite the fact that the same mission would take a
@@ -505,7 +570,6 @@ the rendering.
 
 \section{Conclusions}
 Conclusions here
-
 
 \begin{thebibliography}{9}
 \bibitem{sensefly1}
