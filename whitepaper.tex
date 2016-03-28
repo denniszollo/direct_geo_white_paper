@@ -52,7 +52,8 @@ for aerial surveying is evaluated.
 \newpage
 \section{Overview}
 \label{sec:Overview}
-Due to the capability, low-cost, and popularity of micro aerial vehicles aerial surveying in industries such as precision agriculture, mining, and forestry is of great interest\ref{buyers_guide}.
+Due to the capability, low-cost, and popularity of micro aerial vehicles aerial surveying in industries such as 
+precision agriculture, mining, and forestry is of great interest\ref{buyers_guide}.
 
 In a typical aerial surveying use-case, an aircraft is outfitted with a high-quality camera and
 overflies an area of interest while capturing a series of images.  The images are then processed in
@@ -99,7 +100,8 @@ with a fixed 20mm lense and a 16 MP CCID sensor was used as an imaging system. S
 \ref{cameraspecs} for detailed camera specifications. The application also required the
 ability to electrically sense the shutter which was achieved through the use of a "Fotasy SANEX Hot
 Shoe Adapter" Prontor/Compur (PC) socket for external flash synchronization.  The digital flash signal was
-routed from the PC socket to the "external event" trigger feature of the Piksi receiver (pin 0 of Piksi's debug connector.)
+routed from the PC socket to the "external event" trigger feature of the Piksi receiver (pin 0 of Piksi's debug 
+connector.)
 
 The vehicle was designed and sized to carry the camera payload for a typical surveying mission.
 While a fixed wing aircraft may be more applicable to surveying missions for their increased range,
@@ -193,7 +195,8 @@ camera direction) into an autonomous mission for Pixhawk.
 The mission analyzed in this paper was designed with UAV surveying standards in mind. With a 75
 percent overlap and 60 percent sidelap, the vehicle flew for approximately 22 minutes to capture
 218 images. The copter in this mission was flown at 20m altitude which in theory gives a 2.37 mm
-ground sampling distance (GSD). Pix4D reported an average GSD of 4.9 mm due to the terrain change and altitude variations of
+ground sampling distance (GSD). Pix4D reported an average GSD of 4.9 mm due to the terrain change and altitude 
+variations of
 the vehicle during the mission. Figure \ref{flightplan} shows the flight plan of the copter and the
 locations of the ground control points.
 
@@ -268,7 +271,10 @@ Config & Description & Calibration Method & Included Images & GPS Sensor & Groun
 \end{table}
 
 \section{Results}
-The survey mission and the various post-processing techniques provided typical UAV survey results.  Most images were calibrated and stitched together to create survey outputs such as orthomosaics, digital elevation models, and point clouds.  In the section that follows, the resultant outputs are analyzed as to understand how improved GPS accuracy ground control, and different post-processing strategies can affect their quality.
+The survey mission and the various post-processing techniques provided typical UAV survey results.  Most images were 
+calibrated and stitched together to create survey outputs such as orthomosaics, digital elevation models, and point 
+clouds.  In the section that follows, the resultant outputs are analyzed as to understand how improved GPS accuracy 
+ground control, and different post-processing strategies can affect their quality.
 \begin{figure}
 \centering
 \renewcommand*\thesubfigure{\arabic{subfigure}}
@@ -407,14 +413,19 @@ The survey mission and the various post-processing techniques provided typical U
 \subsection{Accuracy}
 
 Accuracy in surveying data can be defined as both the relative accuracy between locations in the scene
-and absolute accuracy in placing the data on earth. Ground control points (GCPs) and accurate image geotagging can help post-processing softwares with both aims.
+and absolute accuracy in placing the data on earth. Ground control points (GCPs) and accurate image geotagging can help 
+post-processing softwares with both aims.
 In order to evaluate the ability to correctly scale an image, the distance between 2 GCP markers in
 the post-processed image was used.  This measurement could be a proxy for many surveying outputs
 as well as volumetric measurements.  For this analysis, the distance between ground control point
 1 and ground control point 8 was used.  This distance was surveyed in advance to be 54.83
 metres. There was little to no difference between the distance as calculated from the survey outputs
-between any of the post-processing configurations. It is hypothesized that if geolocation information quality is within a threshold, Pix4D does not weigh the image geolocation data and most image scaling information comes from image processing.  Thus there were no clear gains from an RTK GPS sensor with respect to relative measurements in images.
-The ground control points used as 3d Checkpoints were attempted to be used to evaluate the absolute positioning of survey outputs with respect to the earth.  However this method yielded inconclusive results that suggested problems in the surveyed positions of ground control points.
+between any of the post-processing configurations. It is hypothesized that if geolocation information quality is within 
+a threshold, Pix4D does not weigh the image geolocation data and most image scaling information comes from image 
+processing.  Thus there were no clear gains from an RTK GPS sensor with respect to relative measurements in images.
+The ground control points used as 3d Checkpoints were attempted to be used to evaluate the absolute positioning of 
+survey outputs with respect to the earth.  However this method yielded inconclusive results that suggested problems in 
+the surveyed positions of ground control points.
 \subsection{Accurate Calibration Method}
 A technical contact at PixD suggested using the "Accurate Geolocation and Orientation" calibration
 methods in order to configure Pix4d to weigh more heavliy image geolocaiton information.
@@ -423,7 +434,10 @@ using "Accurate Geolocation and Orientation" settings in Pix4D.  It was expected
 calibration method would produce better orthomosaic and point
 cloud results, but the results were qualitatively worse. Observing Table \ref{table:qualityreport},
 both Piksi and Ublox show increased errors. The RMS errors increase to a point that configuration 11 doesn't
-produce DSM or orthomosaic and configuration 12 cannot perform initial image calibration and thus are omitted from the results.  In Figure \ref{ortho} the orthomosaics of Piksi clearly show that the orthomosaics with the accurate calibration method cover less area compared to default settings.  The digital elevation models produced from the accurate calibration method yielded strage artifiacts.
+produce DSM or orthomosaic and configuration 12 cannot perform initial image calibration and thus are omitted from the 
+results.  In Figure \ref{ortho} the orthomosaics of Piksi clearly show that the orthomosaics with the accurate 
+calibration method cover less area compared to default settings.  The digital elevation models produced from the 
+accurate calibration method yielded strage artifiacts.
 One possible theory to explain the behavior is that the inaccuracy of the orientation data
 starts to dominate in with this calibration method. Since the Pixhawk flight controller in the experiment has a
 relatively low quality MEMS IMU, it cannot be expected to have highly accurate attitude
@@ -541,26 +555,37 @@ c  &0.1 &0.2 &84  &5887  &0.061538  &0.06066   &0.111367 \\ \hline
 
 \subsection{Issues}
 There were many issues and learning opportunities during data collection and analysis which are presented
-to help future researchers avoid common pitfalls.  First, it is important to match flying speed and image triggering intervals with the imaging sensor's 
-ability to buffer images. Part of the post processing procedure involves comparing the number
-of triggered images (Mavlink CAM messages) to the number of shutters recorded (Piksi SBP MSG\_EXT\_EVENT message)s. If there are more trigger messages than images or recorded shutter events the mission was most likely flown too fast for the camera to react to shutter triggers.
+to help future researchers avoid common pitfalls.  First, it is important to match flying speed and image triggering 
+intervals with the imaging sensor's ability to buffer images. Part of the post processing procedure involves comparing the number
+of triggered images (Mavlink CAM messages) to the number of shutters recorded (Piksi SBP MSG\_EXT\_EVENT message)s. If 
+there are more trigger messages than images or recorded shutter events the mission was most likely flown too fast for 
+the camera to react to shutter triggers.
 
 Moreover, while post-processing configuration with GCP markers, few tie points were found in images including the
 GCPs. Considering figure \ref{fig:flightplan} it is clear that most of the GCPs were placed on the
 edge of the mission range. This made it difficult for Pix4D to accurately define and use these
-points for the processing procedure.  In a future data collection effort ground control points should be placed in low detailed portions of the scene and/or areas with high image overlap as opposed to the edges of the scene.
+points for the processing procedure.  In a future data collection effort ground control points should be placed in low 
+detailed portions of the scene and/or areas with high image overlap as opposed to the edges of the scene.
 
 One additional issue was limited understanding and closed 
-nature of the Pix4D processing software. Many of the results would be more clear with a deeper understanding of the algorithms and heuristics in the post-processing tool. Software inputs such as the initial accuracy estimates
-and orientation inputs (omega/phi/kappa) had unexplained roles in the rendering process. Different post-processing tools (Agisoft PhotoScan or Visual 
+nature of the Pix4D processing software. Many of the results would be more clear with a deeper understanding of the 
+algorithms and heuristics in the post-processing tool. Software inputs such as the initial accuracy estimates
+and orientation inputs (omega/phi/kappa) had unexplained roles in the rendering process. Different post-processing 
+tools (Agisoft PhotoScan or Visual 
 Surveyor) or a deeper understanding and/or partnership with Pix4D would improve future analysis work.
 
 \section{Conclusions}
-Micro aerial Vehicles have the potential to greatly reduce costs and complexity of aerial surveying and to arm end-users with actionable data.  To that end, this paper presented methods and results of integrating Swift Navigation's Piksi RTK receiver into a MAV surveying system.  In the end, it is clear that more accurate geolocation information can improve aerial surveying results.  Specifically, with increased geolocation accuracy sidelap and overlap can be reduced and the image location errors reported by image stitching software can be reduced.
+Micro aerial Vehicles have the potential to greatly reduce costs and complexity of aerial surveying and to arm 
+end-users with actionable data.  To that end, this paper presented methods and results of integrating Swift 
+Navigation's Piksi RTK receiver into a MAV surveying system.  In the end, it is clear that more accurate geolocation 
+information can improve aerial surveying results.  Specifically, with increased geolocation accuracy sidelap and 
+overlap can be reduced and the image location errors reported by image stitching software can be reduced.
 
 \section{Acknowledgments}
 
-Please acknowledge Andrew McIntyre from Pix4D for his technical support and Malcolm Morrison from Agriculture and Agri-Food Canada for his thoughts and advice.  Also please extend a special thank you to Diana Schlosser (Swift) for access to her property.
+Please acknowledge Andrew McIntyre from Pix4D for his technical support and Malcolm Morrison from Agriculture and 
+Agri-Food Canada for his thoughts and advice.  Also please extend a special thank you to Diana Schlosser (Swift) for 
+access to her property.
 
 \begin{thebibliography}{9}
 \bibitem{sensefly1}
@@ -576,7 +601,8 @@ pdf}
 "Menu Process Processing Options... 1. Initial Processing Calibration." Pix4d. Retrieved March 24
 2016, from \url{https://support.pix4d.com/hc/en-us/articles/205327965#label2&gsc.tab=0}
 \bibitem{buyers_guide}
-Nixon, Andrew (2016). "Agriculture Drone Buyers Guide" Retrieved March 26 2016 from \url{http://bestdroneforthejob.com/drones-for-work/agriculture-drone-buyers-guide/}
+Nixon, Andrew (2016). "Agriculture Drone Buyers Guide" Retrieved March 26 2016 from 
+\url{http://bestdroneforthejob.com/drones-for-work/agriculture-drone-buyers-guide/}
 \end{thebibliography}
 \thispagestyle{lastpage}
 \end{document}
