@@ -52,7 +52,7 @@ for aerial surveying is evaluated.
 \newpage
 \section{Overview}
 \label{sec:Overview}
-Due to the capability, low-cost, and popularity of micro aerial vehicles aerial surveying in industries such as precision agriculture, mining, and forestry is of great interest.
+Due to the capability, low-cost, and popularity of micro aerial vehicles aerial surveying in industries such as precision agriculture, mining, and forestry is of great interest\ref{buyers_guide}.
 
 In a typical aerial surveying use-case, an aircraft is outfitted with a high-quality camera and
 overflies an area of interest while capturing a series of images.  The images are then processed in
@@ -540,37 +540,23 @@ c  &0.1 &0.2 &84  &5887  &0.061538  &0.06066   &0.111367 \\ \hline
 \end{table}
 
 \subsection{Issues}
-Many problems presented themselves during the analysis journey. One of the first mistakes realized
-had to do with the flying speed. Part of the post processing procedure involves comparing the number
-of CAM (Pixhawk's camera trigger) messages to the MSG\_EXT\_EVENT(Piksi's trigger) messages. Having
-a greater number of Pixhawk trigger messages than Piksi meant the mission was flown too fast for the
-camera.
+There were many issues and learning opportunities during data collection and analysis which are presented
+to help future researchers avoid common pitfalls.  First, it is important to match flying speed and image triggering intervals with the imaging sensor's 
+ability to buffer images. Part of the post processing procedure involves comparing the number
+of triggered images (Mavlink CAM messages) to the number of shutters recorded (Piksi SBP MSG\_EXT\_EVENT message)s. If there are more trigger messages than images or recorded shutter events the mission was most likely flown too fast for the camera to react to shutter triggers.
 
-Moreover, while executing renders with GCP markers, not many tie points were found for most of the
-GCPs. Considering Figure \ref{postprocess} it can be seen that most of the GCPs were placed on the
+Moreover, while post-processing configuration with GCP markers, few tie points were found in images including the
+GCPs. Considering figure \ref{fig:flightplan} it is clear that most of the GCPs were placed on the
 edge of the mission range. This made it difficult for Pix4D to accurately define and use these
-points for the processing procedure.
+points for the processing procedure.  In a future data collection effort ground control points should be placed in low detailed portions of the scene and/or areas with high image overlap as opposed to the edges of the scene.
 
-\subsection{Next Steps}
-Surveying a crop field and other landmarks is a very daunting task. It requires expensive equipment
-and skills to understand and produce valuable data. MAVs bring all these tools to the people in an
-affordable and easy to understand fashion. In attempt to prove the benefit of accurate geotags for
-aerial surveyed data, a wide room of improvement was realized. First and foremost, one of the
-limiting factors for this project was the closed nature of Pix4D. Many of the results could have
-been better explained if Pix4D's rendering process was explained. Features such as initial accuracy
-and orientation inputs(omega/phi/kappa) had unexplained roles in the rendering process. For future
-development, either switching to a different post processing tool (Agisoft PhotoScan or Visual 
-Surveyor) or understanding Pix4D deeply would be of best choice.
-
-Reflecting from some of the issues mentioned in the above section \ref{Issues}, if this surveying
-mission were to happen again, many things would be done differently. Flight speed would be reduced
-to compensate for the slow speed of the camera despite the fact that the same mission would take a
-bit longer to execute. Moreover, the ground control points would be placed more inland from the
-edges of the mission range. This would ensure that all the GCPs have sufficient data to help with
-the rendering.
+One additional issue was limited understanding and closed 
+nature of the Pix4D processing software. Many of the results would be more clear with a deeper understanding of the algorithms and heuristics in the post-processing tool. Software inputs such as the initial accuracy estimates
+and orientation inputs (omega/phi/kappa) had unexplained roles in the rendering process. Different post-processing tools (Agisoft PhotoScan or Visual 
+Surveyor) or a deeper understanding and/or partnership with Pix4D would improve future analysis work.
 
 \section{Conclusions}
-Conclusions here
+Micro aerial Vehicles have the potential to greatly reduce costs and complexity of aerial surveying and to arm end-users with actionable data.  To that end, this paper presented methods and results of integrating Swift Navigation's Piksi RTK receiver into a MAV surveying system.  In the end, it is clear that more accurate geolocation information can improve aerial surveying results.  Specifically, with increased geolocation accuracy sidelap and overlap can be reduced and the image location errors reported by image stitching software can be reduced.
 
 \begin{thebibliography}{9}
 \bibitem{sensefly1}
@@ -585,6 +571,8 @@ pdf}
 \bibitem{pix4d_support1}
 "Menu Process Processing Options... 1. Initial Processing Calibration." Pix4d. Retrieved March 24,
 2016, from \url{https://support.pix4d.com/hc/en-us/articles/205327965#label2&gsc.tab=0}
+\bibitem{buyers_guide}
+Nixon, Andrew (2016). "Agriculture Drone Buyers Guide" Retrieved March 26 2016 from \url{http://bestdroneforthejob.com/drones-for-work/agriculture-drone-buyers-guide/}}
 \end{thebibliography}
 \thispagestyle{lastpage}
 \end{document}
